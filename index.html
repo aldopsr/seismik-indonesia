@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indeks Bahaya Seismik Indonesia (H3-SHI) - Kelompok 8 Big Data</title>
+  <style>
+    :root, [data-theme="light"] {
+      --bg-canvas: #FAF9F6;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #F3F2EE;
+      --ink-primary: #141413;
+      --ink-muted: #57534E;
+      --border-line: #E5E5E5;
+      --border-strong: #141413;
+      --data-accent: #B91C1C;
+      --data-high: #D97706;
+      --data-mod: #A16207;
+      --data-low: #78716C;
+      --focus-ring: #141413;
+      --map-land: #ECEAE4;
+      --map-stroke: #D6D3CD;
+    }
+
+    [data-theme="dark"] {
+      --bg-canvas: #141413;
+      --bg-surface: #1C1917;
+      --bg-subtle: #262320;
+      --ink-primary: #F5F5F4;
+      --ink-muted: #A8A29E;
+      --border-line: #2E2B28;
+      --border-strong: #F5F5F4;
+      --data-accent: #F87171;
+      --data-high: #FBBF24;
+      --data-mod: #FDE047;
+      --data-low: #A8A29E;
+      --focus-ring: #F5F5F4;
+      --map-land: #262320;
+      --map-stroke: #3F3B37;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.92em;
+    }
+
+    .num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    a, button, select, input {
+      font: inherit;
+      color: inherit;
+    }
+
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    button, select, a.btn-link, .map-point {
+      cursor: pointer;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 8px;
+      z-index: 100;
+      background: var(--bg-surface);
+      color: var(--ink-primary);
+      padding: 8px 12px;
+      border: 1px solid var(--border-strong);
+      text-decoration: none;
+    }
+    .skip-link:focus {
+      left: 16px;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+
+    /* Header & Navigation */
+    .site-header {
+      border-bottom: 1px solid var(--border-line);
+      background-color: var(--bg-surface);
+      padding: 20px 0 0;
+      margin-bottom: 28px;
+    }
+
+    .header-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding-bottom: 16px;
+    }
+
+    .title-group {
+      max-width: 72ch;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin: 0 0 6px 0;
+      line-height: 1.25;
+    }
+
+    .lead-finding {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      color: var(--ink-primary);
+      max-width: 68ch;
+    }
+
+    .run-meta {
+      margin: 0;
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-control, .btn-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      background-color: var(--bg-surface);
+      color: var(--ink-primary);
+      border: 1px solid var(--border-line);
+      text-decoration: none;
+      transition: background-color 120ms ease, border-color 120ms ease;
+    }
+
+    .btn-control:hover, .btn-link:hover {
+      background-color: var(--bg-subtle);
+      border-color: var(--ink-muted);
+    }
+
+    .btn-primary-link {
+      border-color: var(--border-strong);
+      font-weight: 600;
+    }
+
+    .section-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      border-top: 1px solid var(--border-line);
+      padding: 6px 0;
+    }
+
+    .section-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 6px 12px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+    }
+
+    .section-nav a:hover {
+      color: var(--ink-primary);
+      border-bottom-color: var(--ink-muted);
+    }
+
+    /* Section Structure */
+    .block-section {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border-line);
+    }
+
+    .block-header {
+      margin-bottom: 18px;
+      max-width: 72ch;
+    }
+
+    .block-question {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    .block-answer {
+      margin: 0;
+      font-size: 14px;
+      color: var(--ink-muted);
+      max-width: 68ch;
+    }
+
+    /* Block 2: Primary KPI Typographic Row */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: 1.35fr repeat(4, 1fr);
+      border-top: 1px solid var(--border-line);
+      border-bottom: 1px solid var(--border-line);
+      background-color: var(--bg-surface);
+    }
+
+    .kpi-item {
+      padding: 18px 20px;
+      border-right: 1px solid var(--border-line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .kpi-item:last-child {
+      border-right: none;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      margin: 0 0 8px 0;
+    }
+
+    .kpi-value-primary {
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--data-accent);
+      font-variant-numeric: tabular-nums;
+      margin: 0 0 6px 0;
+    }
+
+    .kpi-value {
+      font-size: 25px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--ink-primary);
+      font-variant-numeric: tabular-nums;
+      margin: 0 0 6px 0;
+    }
+
+    .kpi-note {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Two-column layouts */
+    .split-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .split-channel-map {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-line);
+      padding: 20px;
+      min-width: 0;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin: 0 0 14px 0;
+      max-width: 65ch;
+    }
+
+    /* SVG Charts */
+    .chart-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .svg-gridline {
+      stroke: var(--border-line);
+      stroke-width: 1;
+    }
+
+    .svg-baseline {
+      stroke: var(--ink-primary);
+      stroke-width: 1.5;
+    }
+
+    .svg-label {
+      fill: var(--ink-primary);
+      font-size: 12px;
+    }
+
+    .svg-muted {
+      fill: var(--ink-muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .svg-val {
+      fill: var(--ink-primary);
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-line);
+    }
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+
+    .select-input, .text-input {
+      max-width: 100%;
+      min-height: 44px;
+      padding: 6px 12px;
+      font-size: 13px;
+      background-color: var(--bg-canvas);
+      color: var(--ink-primary);
+      border: 1px solid var(--border-line);
+    }
+
+    .filter-btn {
+      min-height: 44px;
+      padding: 6px 12px;
+      font-size: 13px;
+      background-color: var(--bg-canvas);
+      color: var(--ink-primary);
+      border: 1px solid var(--border-line);
+    }
+
+    .filter-btn[aria-pressed="true"] {
+      border-color: var(--border-strong);
+      background-color: var(--bg-subtle);
+      font-weight: 600;
+    }
+
+    /* Tables */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--border-line);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--ink-muted);
+      background-color: var(--bg-subtle);
+      white-space: nowrap;
+    }
+
+    th.num, td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-subtle);
+    }
+
+    tbody tr.is-selected {
+      outline: 2px solid var(--data-accent);
+      outline-offset: -2px;
+    }
+
+    .sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+      min-height: 36px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      color: var(--ink-primary);
+      text-align: inherit;
+    }
+
+    th.num .sort-btn {
+      justify-content: flex-end;
+    }
+
+    .sort-indicator {
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .status-tag {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 11px;
+      border: 1px solid var(--border-line);
+      background-color: var(--bg-subtle);
+      color: var(--ink-primary);
+      white-space: nowrap;
+    }
+
+    .missing-cell {
+      color: var(--ink-muted);
+    }
+
+    /* UI State Boxes (Empty, Loading, Error) */
+    .ui-state-box {
+      padding: 28px 20px;
+      text-align: center;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-line);
+    }
+
+    .ui-state-box p {
+      margin: 0 0 12px 0;
+      color: var(--ink-muted);
+      font-size: 14px;
+    }
+
+    /* Limitations Grid */
+    .limitations-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .limitation-item {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-line);
+      padding: 18px 20px;
+    }
+
+    .limitation-item h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+    }
+
+    .limitation-item p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--ink-muted);
+      max-width: 65ch;
+    }
+
+    .cell-detail-dl {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px 14px;
+      margin: 14px 0 0 0;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-line);
+      font-size: 12px;
+    }
+
+    .cell-detail-dl div {
+      min-width: 0;
+    }
+
+    .cell-detail-dl dt {
+      color: var(--ink-muted);
+      margin-bottom: 2px;
+    }
+
+    .cell-detail-dl dd {
+      margin: 0;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .site-footer {
+      padding: 28px 0 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .kpi-item:nth-child(1) {
+        grid-column: 1 / -1;
+        border-right: none;
+        border-bottom: 1px solid var(--border-line);
+      }
+      .kpi-item:nth-child(2), .kpi-item:nth-child(3) {
+        border-bottom: 1px solid var(--border-line);
+      }
+      .split-channel-map, .split-2, .limitations-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container, .header-inner {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .cell-detail-dl {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-strip {
+        grid-template-columns: 1fr;
+      }
+      .kpi-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border-line);
+      }
+      .kpi-item:last-child {
+        border-bottom: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Lewati ke konten utama</a>
+
+  <!-- BLOK 1: Baris Judul -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="title-group">
+          <h1>Indeks Bahaya Seismik Indonesia (H3-SHI)</h1>
+          <p class="lead-finding">
+            Dari <strong>7.017</strong> sel heksagonal aktif yang dianalisis, zona bahaya seismik tertinggi terkonsentrasi di <strong>Zona Tumbukan Laut Maluku</strong> (<strong>17 dari 20</strong> sel teratas di Maluku Utara), dengan sel puncak <code class="mono">8568c9affffffff</code> mencapai skor <strong>SHI 0,8354</strong>.
+          </p>
+          <p class="run-meta">
+            Katalog: 1960 s.d. 2024 (314.023 gempa tersaring dari 322.961 mentah) &middot; Grid: Uber H3 Resolusi 5 (~252,9 km&sup2;/sel) &middot; Ambang: N_min = 10, Mc = 4,0 (85.413 gempa &ge; Mc) &middot; Bobot utama: Setara (0,25 per kanal)
+          </p>
+        </div>
+        <div class="header-actions">
+          <button type="button" id="theme-toggle" class="btn-control" aria-label="Ganti tema warna">
+            Mode Gelap
+          </button>
+          <a href="indonesia_seismic_hazard_map.html" class="btn-link btn-primary-link">
+            Buka Peta Interaktif 7.017 Sel (Folium)
+          </a>
+        </div>
+      </div>
+
+      <nav class="section-nav" aria-label="Navigasi bagian analisis">
+        <a href="#ringkasan">Angka Utama</a>
+        <a href="#distribusi-tier">Distribusi Tier</a>
+        <a href="#penjelas-kanal">Penjelas Kanal &amp; Peta</a>
+        <a href="#top20">Tabel Top-20</a>
+        <a href="#sensitivitas">Uji Sensitivitas</a>
+        <a href="#validasi-event">Validasi Gempa Besar</a>
+        <a href="#keterbatasan">Keterbatasan</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="container">
+    <!-- BLOK 2: Angka Utama -->
+    <section id="ringkasan" class="block-section" aria-labelledby="heading-ringkasan">
+      <div class="block-header">
+        <h2 id="heading-ringkasan" class="block-question">Berapa skor bahaya seismik nasional dan di mana konsentrasi tertingginya?</h2>
+        <p class="block-answer">
+          Skor H3-SHI nasional pada 7.017 sel aktif rata-rata berada pada angka <strong>0,5603</strong> (median 0,5601; simpangan baku 0,0808). Seluruh sel telah melewati saringan minimal 10 gempa, sehingga tidak ada sel aktif yang jatuh ke kategori bahaya rendah absolut.
+        </p>
+      </div>
+
+      <div class="kpi-strip" role="region" aria-label="Metrik utama H3-SHI">
+        <div class="kpi-item">
+          <p class="kpi-label">Rata-rata SHI nasional (bobot setara)</p>
+          <p class="kpi-value-primary num">0,5603</p>
+          <p class="kpi-note">Rentang: 0,2733 s.d. 0,8354 (median 0,5601)</p>
+        </div>
+        <div class="kpi-item">
+          <p class="kpi-label">Dominasi Maluku Utara di Top-20</p>
+          <p class="kpi-value num">17 / 20 sel</p>
+          <p class="kpi-note">Diikuti Sulawesi Utara (2) &amp; Papua (1); 17 lepas pantai</p>
+        </div>
+        <div class="kpi-item">
+          <p class="kpi-label">Sel H3 aktif dianalisis (N &ge; 10)</p>
+          <p class="kpi-value num">7.017 sel</p>
+          <p class="kpi-note">Dari 17.140 sel tersentuh gempa (10.123 sel dibuang)</p>
+        </div>
+        <div class="kpi-item">
+          <p class="kpi-label">Nilai b acuan nasional (Aki-Utsu)</p>
+          <p class="kpi-value num">0,7014</p>
+          <p class="kpi-note">Terukur di 5.342 sel (76,1%); andal &sigma;_b &le; 0,1 di 48,9%</p>
+        </div>
+        <div class="kpi-item">
+          <p class="kpi-label">Magnitudo kelengkapan operasional (Mc)</p>
+          <p class="kpi-value num">4,0 Mw/mb</p>
+          <p class="kpi-note">85.413 gempa &ge; Mc (estimasi MAXC: 3,00)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOK 3: Distribusi Tier Berdampingan -->
+    <section id="distribusi-tier" class="block-section" aria-labelledby="heading-tier">
+      <div class="block-header">
+        <h2 id="heading-tier" class="block-question">Mengapa kita memerlukan tier kuartil selain tier absolut?</h2>
+        <p class="block-answer">
+          Ambang absolut tetap (0,25 / 0,50 / 0,75) menempatkan <strong>76,26%</strong> sel di kategori <em>High</em> dan <strong>0 sel</strong> di <em>Low</em> karena sel bersampel &ge; 10 gempa yang dangkal dan bertegangan normal sudah mengantongi nilai dasar SHI sekitar 0,39. Pembagian kuartil memulihkan daya pisah relatif menjadi empat kelompok setara (masing-masing 25%).
+        </p>
+      </div>
+
+      <div class="split-2">
+        <div class="panel">
+          <h3 class="panel-title">Distribusi Tier Absolut (Ambang Tetap 0,25 / 0,50 / 0,75)</h3>
+          <p class="panel-subtitle">Menunjukkan konsentrasi skor pada pita 0,50 s.d. 0,75 dan 55 sel ekstrem (&ge; 0,75).</p>
+          <svg class="chart-svg" viewBox="0 0 560 190" width="560" height="190" role="img" aria-label="Grafik batang distribusi tier absolut: Low 0 sel, Moderate 1.611 sel, High 5.351 sel, Very High 55 sel">
+            <line x1="130" y1="20" x2="530" y2="20" class="svg-gridline" />
+            <line x1="130" y1="60" x2="530" y2="60" class="svg-gridline" />
+            <line x1="130" y1="100" x2="530" y2="100" class="svg-gridline" />
+            <line x1="130" y1="140" x2="530" y2="140" class="svg-gridline" />
+            <line x1="130" y1="162" x2="530" y2="162" class="svg-baseline" />
+
+            <!-- Low: 0 -->
+            <text x="120" y="36" text-anchor="end" class="svg-label">Low (&lt; 0,25)</text>
+            <rect x="130" y="24" width="2" height="18" fill="var(--data-low)" />
+            <text x="138" y="37" class="svg-val">0 sel (0,00%)</text>
+
+            <!-- Moderate: 1.611 (30.1% of 5351 -> ~111px) -->
+            <text x="120" y="74" text-anchor="end" class="svg-label">Moderate (0,25-0,50)</text>
+            <rect x="130" y="62" width="111" height="18" fill="var(--data-mod)" />
+            <text x="249" y="75" class="svg-val">1.611 sel (22,96%)</text>
+
+            <!-- High: 5.351 (370px) -->
+            <text x="120" y="112" text-anchor="end" class="svg-label">High (0,50-0,75)</text>
+            <rect x="130" y="100" width="305" height="18" fill="var(--data-high)" />
+            <text x="443" y="113" class="svg-val">5.351 sel (76,26%)</text>
+
+            <!-- Very High: 55 (4px) -->
+            <text x="120" y="150" text-anchor="end" class="svg-label">Very High (&ge; 0,75)</text>
+            <rect x="130" y="138" width="6" height="18" fill="var(--data-accent)" />
+            <text x="144" y="151" class="svg-val">55 sel (0,78%)</text>
+
+            <text x="130" y="180" class="svg-muted">0 sel</text>
+            <text x="330" y="180" text-anchor="middle" class="svg-muted">3.000 sel</text>
+            <text x="530" y="180" text-anchor="end" class="svg-muted">6.000 sel</text>
+          </svg>
+        </div>
+
+        <div class="panel">
+          <h3 class="panel-title">Distribusi Tier Kuartil Relatif (Berdasarkan Persentil Peringkat)</h3>
+          <p class="panel-subtitle">Membagi 7.017 sel secara merata sehingga variasi bahaya regional tetap terlihat jelas.</p>
+          <svg class="chart-svg" viewBox="0 0 560 190" width="560" height="190" role="img" aria-label="Grafik batang distribusi tier kuartil: Q1 1.754 sel, Q2 1.754 sel, Q3 1.754 sel, Q4 1.755 sel">
+            <line x1="130" y1="20" x2="530" y2="20" class="svg-gridline" />
+            <line x1="130" y1="60" x2="530" y2="60" class="svg-gridline" />
+            <line x1="130" y1="100" x2="530" y2="100" class="svg-gridline" />
+            <line x1="130" y1="140" x2="530" y2="140" class="svg-gridline" />
+            <line x1="130" y1="162" x2="530" y2="162" class="svg-baseline" />
+
+            <text x="120" y="36" text-anchor="end" class="svg-label">Q1 (terendah)</text>
+            <rect x="130" y="24" width="240" height="18" fill="var(--data-low)" />
+            <text x="378" y="37" class="svg-val">1.754 sel (25,00%)</text>
+
+            <text x="120" y="74" text-anchor="end" class="svg-label">Q2 (menengah bawah)</text>
+            <rect x="130" y="62" width="240" height="18" fill="var(--data-mod)" />
+            <text x="378" y="75" class="svg-val">1.754 sel (25,00%)</text>
+
+            <text x="120" y="112" text-anchor="end" class="svg-label">Q3 (menengah atas)</text>
+            <rect x="130" y="100" width="240" height="18" fill="var(--data-high)" />
+            <text x="378" y="113" class="svg-val">1.754 sel (25,00%)</text>
+
+            <text x="120" y="150" text-anchor="end" class="svg-label">Q4 (tertinggi)</text>
+            <rect x="130" y="138" width="241" height="18" fill="var(--data-accent)" />
+            <text x="379" y="151" class="svg-val">1.755 sel (25,01%)</text>
+
+            <text x="130" y="180" class="svg-muted">0%</text>
+            <text x="250" y="180" text-anchor="middle" class="svg-muted">12,5%</text>
+            <text x="370" y="180" text-anchor="middle" class="svg-muted">25,0%</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOK 4: Penjelas Kanal + Peta Ikhtisar Centroid -->
+    <section id="penjelas-kanal" class="block-section" aria-labelledby="heading-kanal">
+      <div class="block-header">
+        <h2 id="heading-kanal" class="block-question">Mengapa sel <code id="question-cell-id" class="mono">8568c9affffffff</code> menempati peringkat <span id="question-cell-rank">#1</span>?</h2>
+        <p class="block-answer" id="channel-narrative">
+          Sel #1 di lepas pantai Maluku Utara mencatat 276 gempa total (130 gempa &ge; Mc 4,0), sehingga kanal densitas ternormalisasi (<code>n_norm = 0,9594</code>) dan proporsi gempa dangkal (<code>s_norm = 0,9676</code>) jauh melampaui rata-rata nasional. Pilih sel lain dari daftar, tombol cepat, peta, atau tabel di bawah untuk membandingkan profil empat kanalnya.
+        </p>
+      </div>
+
+      <div class="controls-bar">
+        <div class="control-group">
+          <label for="cell-selector" class="control-label">Pilih sel Top-20:</label>
+          <select id="cell-selector" class="select-input"></select>
+        </div>
+        <div class="control-group" aria-label="Pilihan cepat sel perwakilan">
+          <span class="control-label">Lompat cepat:</span>
+          <button type="button" class="filter-btn quick-cell-btn" data-h3="8568c9affffffff" aria-pressed="true">#1 Maluku Utara (Puncak SHI)</button>
+          <button type="button" class="filter-btn quick-cell-btn" data-h3="8568c9abfffffff" aria-pressed="false">#2 Maluku Utara (Mag 7,2)</button>
+          <button type="button" class="filter-btn quick-cell-btn" data-h3="8573b0c7fffffff" aria-pressed="false">#16 Sulawesi Utara</button>
+          <button type="button" class="filter-btn quick-cell-btn" data-h3="8572f343fffffff" aria-pressed="false">#20 Papua (Daratan)</button>
+        </div>
+      </div>
+
+      <div class="split-channel-map">
+        <!-- Panel Kiri: Grafik 4 Kanal vs Rata-rata Nasional -->
+        <div class="panel">
+          <h3 class="panel-title">Profil 4 Kanal Penyusun H3-SHI vs Rata-rata Nasional (7.017 Sel)</h3>
+          <p class="panel-subtitle">
+            Batang penuh menunjukkan nilai kanal sel terpilih; garis vertikal hitam menandai rata-rata nasional (<code>n_norm 0,4181</code> &middot; <code>s_norm 0,7617</code> &middot; <code>b_inv 0,8484</code> &middot; <code>m_norm 0,2130</code>).
+          </p>
+          <svg id="channel-svg" class="chart-svg" viewBox="0 0 560 210" width="560" height="210" role="img" aria-label="Perbandingan 4 kanal sel terpilih terhadap rata-rata nasional"></svg>
+
+          <dl id="selected-cell-details" class="cell-detail-dl"></dl>
+        </div>
+
+        <!-- Panel Kanan: Peta Ikhtisar SVG Centroid Top-20 & 6 Gempa Rujukan -->
+        <div class="panel">
+          <h3 class="panel-title">Peta Ikhtisar Centroid Top-20 &amp; 6 Episenter Gempa Rujukan</h3>
+          <p class="panel-subtitle">
+            17 dari 20 sel tertinggi mengelompok rapat di Punggungan Mayu, Laut Maluku (126&deg; BT). Klik titik merah untuk menginspeksi sel.
+          </p>
+          <svg id="overview-map-svg" class="chart-svg" viewBox="0 0 720 270" width="720" height="270" role="img" aria-label="Peta garis pantai Indonesia menampilkan klaster Top-20 di Maluku Utara, Sulawesi Utara, dan Papua serta 6 gempa besar bersejarah"></svg>
+          <p class="kpi-note" style="margin-top: 10px;">
+            Keterangan peta: Titik merah bulat = centroid Top-20 sel H3 (klik untuk memilih); kotak berbingkai hitam = 6 episenter gempa besar rujukan (1960-2024). Peta poligon 7.017 sel penuh tersedia di <a href="indonesia_seismic_hazard_map.html">peta Folium interaktif</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- BLOK 5: Tabel Top-20 -->
+    <section id="top20" class="block-section" aria-labelledby="heading-top20">
+      <div class="block-header">
+        <h2 id="heading-top20" class="block-question">Sel H3 mana saja yang menempati 20 peringkat bahaya tertinggi?</h2>
+        <p class="block-answer">
+          Seluruh 20 sel teratas berstatus <em>Very High</em> (&ge; 0,75) dan 100% memiliki nilai <em>b</em> terukur secara langsung (tanpa imputasi) dengan galat baku &sigma;_b &le; 0,036. Sebanyak 15 sel dipicu oleh densitas gempa tinggi, sedangkan 5 sel lainnya dipicu oleh magnitudo maksimum. Klik baris mana pun untuk memuat profil kanalnya di atas.
+        </p>
+      </div>
+
+      <div class="controls-bar">
+        <div class="control-group" role="group" aria-label="Saring berdasarkan provinsi">
+          <span class="control-label">Provinsi:</span>
+          <button type="button" class="filter-btn prov-filter-btn" data-prov="ALL" aria-pressed="true">Semua (20)</button>
+          <button type="button" class="filter-btn prov-filter-btn" data-prov="Maluku Utara" aria-pressed="false">Maluku Utara (17)</button>
+          <button type="button" class="filter-btn prov-filter-btn" data-prov="Sulawesi Utara" aria-pressed="false">Sulawesi Utara (2)</button>
+          <button type="button" class="filter-btn prov-filter-btn" data-prov="Papua" aria-pressed="false">Papua (1)</button>
+        </div>
+
+        <div class="control-group">
+          <label for="table-search" class="control-label">Cari sel / pemicu:</label>
+          <input type="search" id="table-search" class="text-input" placeholder="Mis. 8568c9a atau Papua..." autocomplete="off">
+        </div>
+
+        <div class="control-group" role="group" aria-label="Simulasi status antarmuka tabel">
+          <span class="control-label">Status tampilan:</span>
+          <button type="button" class="filter-btn state-mode-btn" data-state="normal" aria-pressed="true">Data Aktif</button>
+          <button type="button" class="filter-btn state-mode-btn" data-state="loading" aria-pressed="false">Memuat</button>
+          <button type="button" class="filter-btn state-mode-btn" data-state="error" aria-pressed="false">Galat</button>
+        </div>
+      </div>
+
+      <div id="top20-state-container" class="ui-state-box" hidden aria-live="polite"></div>
+
+      <div class="table-wrap" id="top20-table-wrap">
+        <table aria-label="Tabel 20 sel H3 dengan skor bahaya seismik tertinggi">
+          <thead>
+            <tr>
+              <th scope="col" class="num" aria-sort="ascending">
+                <button type="button" class="sort-btn" data-sort="rank"># <span class="sort-indicator" aria-hidden="true">&uarr;</span></button>
+              </th>
+              <th scope="col">Indeks H3</th>
+              <th scope="col">
+                <button type="button" class="sort-btn" data-sort="province">Provinsi &amp; Posisi <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">Koordinat</th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="total_events">Gempa <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="n_mc">N &ge; Mc <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="shallow_ratio">Dangkal <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="default_depth_share">Depth Def. <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="max_magnitude">Mag Maks <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="b_value_imputed">Nilai b (&sigma;_b, Status) <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="shi">Skor SHI <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col" class="num">
+                <button type="button" class="sort-btn" data-sort="shi_entropy">Entropi <span class="sort-indicator" aria-hidden="true"></span></button>
+              </th>
+              <th scope="col">Pemicu Risiko</th>
+            </tr>
+          </thead>
+          <tbody id="top20-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BLOK 6: Ringkasan Sensitivitas (4 Pengujian) -->
+    <section id="sensitivitas" class="block-section" aria-labelledby="heading-sensitivitas">
+      <div class="block-header">
+        <h2 id="heading-sensitivitas" class="block-question">Seberapa kokoh peringkat Top-20 terhadap perubahan parameter metodologis?</h2>
+        <p class="block-answer">
+          Empat uji sensitivitas membuktikan bahwa klaster puncak di Laut Maluku bukan artefak parameter: mengubah ambang jumlah gempa minimum (<code>N_min</code>) maupun membuang 30,24% gempa berkedalaman asumsi menghasilkan <strong>20/20 sel Top-20 yang identik</strong>. Konversi skala magnitudo Scordilis (2006) menghasilkan <strong>18/20</strong> kesamaan pada Mc tetap 4,00 (korelasi peringkat Spearman &rho; = 0,9779).
+        </p>
+      </div>
+
+      <div class="split-2" style="margin-bottom: 24px;">
+        <!-- Uji 1: Sensitivitas N_min -->
+        <div class="panel">
+          <h3 class="panel-title">Uji A: Ambang Minimum Gempa per Sel (N_min = 5, 10, 20)</h3>
+          <p class="panel-subtitle">Peringkat Top-20 bertahan 20/20 di semua ambang; N_min = 10 menyeimbangkan cakupan 7.017 sel dan proporsi nilai b terukur (76,1%).</p>
+          <div class="table-wrap" style="margin-bottom: 12px;">
+            <table aria-label="Tabel sensitivitas ambang N_min">
+              <thead>
+                <tr>
+                  <th scope="col">Konfigurasi</th>
+                  <th scope="col" class="num">Sel Aktif</th>
+                  <th scope="col" class="num">Sel Dibuang</th>
+                  <th scope="col" class="num">b Terukur (%)</th>
+                  <th scope="col" class="num">Rata-rata SHI</th>
+                  <th scope="col" class="num">Irisan Top-20</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>N_min = 5</code> (longgar)</td>
+                  <td class="num">10.055</td>
+                  <td class="num">7.085</td>
+                  <td class="num">60,1%</td>
+                  <td class="num">0,5418</td>
+                  <td class="num"><strong>20 / 20</strong></td>
+                </tr>
+                <tr>
+                  <td><strong><code>N_min = 10</code> (utama)</strong></td>
+                  <td class="num"><strong>7.017</strong></td>
+                  <td class="num"><strong>10.123</strong></td>
+                  <td class="num"><strong>76,1%</strong></td>
+                  <td class="num"><strong>0,5603</strong></td>
+                  <td class="num"><strong>20 / 20</strong></td>
+                </tr>
+                <tr>
+                  <td><code>N_min = 20</code> (ketat)</td>
+                  <td class="num">4.132</td>
+                  <td class="num">13.008</td>
+                  <td class="num">87,9%</td>
+                  <td class="num">0,5820</td>
+                  <td class="num"><strong>20 / 20</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="kpi-note">Pada N_min = 20, jumlah sel <em>Very High</em> tetap persis 55 sel (rentang SHI 0,2733 s.d. 0,8354 tidak berubah).</p>
+        </div>
+
+        <!-- Uji 2: Sensitivitas Kedalaman Default -->
+        <div class="panel">
+          <h3 class="panel-title">Uji B: Penghapusan Kedalaman Default (10 km &amp; 35 km = 30,24% Event)</h3>
+          <p class="panel-subtitle">Membuang 94.957 gempa berkedalaman terpatok instansi (84.528 di 10 km; 10.429 di 35 km) sama sekali tidak menggeser komposisi Top-20 (20/20).</p>
+          <div class="table-wrap" style="margin-bottom: 12px;">
+            <table aria-label="Tabel sensitivitas penghapusan kedalaman default">
+              <thead>
+                <tr>
+                  <th scope="col">Perlakuan Kedalaman</th>
+                  <th scope="col" class="num">Rasio Dangkal Nasional</th>
+                  <th scope="col" class="num">Rata-rata s_norm</th>
+                  <th scope="col" class="num">Rata-rata SHI</th>
+                  <th scope="col" class="num">Tier (L / M / H / VH)</th>
+                  <th scope="col" class="num">Irisan Top-20</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Semua event (utama)</strong></td>
+                  <td class="num"><strong>0,7731</strong></td>
+                  <td class="num"><strong>0,7617</strong></td>
+                  <td class="num"><strong>0,5603</strong></td>
+                  <td class="num">0 / 1.611 / 5.351 / 55</td>
+                  <td class="num"><strong>20 / 20</strong></td>
+                </tr>
+                <tr>
+                  <td>Hanya kedalaman terukur</td>
+                  <td class="num">0,6889</td>
+                  <td class="num">0,6849</td>
+                  <td class="num">0,5411</td>
+                  <td class="num">0 / 2.218 / 4.756 / 43</td>
+                  <td class="num"><strong>20 / 20</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="kpi-note">Pergeseran skor SHI pada 20 sel teratas hanya berkisar antara -0,003 hingga -0,010 karena penyusutan empiris (&kappa; = 10) meredam fluktuasi sampel.</p>
+        </div>
+      </div>
+
+      <div class="split-2">
+        <!-- Uji 3: Homogenisasi Magnitudo & Bobot Entropi -->
+        <div class="panel">
+          <h3 class="panel-title">Uji C: Homogenisasi Magnitudo Scordilis (2006) &amp; Pemisahan Efek Mc</h3>
+          <p class="panel-subtitle">Mengonversi 20,8% gempa (mb &amp; Ms ke Mw aproksimasi) sambil memisahkan efek kenaikan ambang Mc 4,80 dari efek rumus konversi.</p>
+          <div class="table-wrap" style="margin-bottom: 12px;">
+            <table aria-label="Tabel sensitivitas homogenisasi magnitudo dan bobot entropi">
+              <thead>
+                <tr>
+                  <th scope="col">Skema Magnitudo &amp; Mc</th>
+                  <th scope="col" class="num">b Terukur</th>
+                  <th scope="col" class="num">Rata-rata SHI</th>
+                  <th scope="col" class="num">Sel VH</th>
+                  <th scope="col" class="num">Irisan Top-20</th>
+                  <th scope="col" class="num">Spearman &rho;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1. Asli pada Mc 4,00 (utama)</strong></td>
+                  <td class="num"><strong>76,1%</strong></td>
+                  <td class="num"><strong>0,5603</strong></td>
+                  <td class="num"><strong>55</strong></td>
+                  <td class="num"><strong>20 / 20 (acuan)</strong></td>
+                  <td class="num"><strong>1,0000</strong></td>
+                </tr>
+                <tr>
+                  <td>2. Terhomogenisasi pada Mc 4,00</td>
+                  <td class="num">81,0%</td>
+                  <td class="num">0,5893</td>
+                  <td class="num">127</td>
+                  <td class="num"><strong>18 / 20</strong> (vs #1)</td>
+                  <td class="num">0,9779</td>
+                </tr>
+                <tr>
+                  <td>3. Asli pada Mc 4,80 (efek ambang)</td>
+                  <td class="num">23,0%</td>
+                  <td class="num">0,4141</td>
+                  <td class="num">0</td>
+                  <td class="num"><strong>16 / 20</strong> (vs #1)</td>
+                  <td class="num">-</td>
+                </tr>
+                <tr>
+                  <td>4. Terhomogenisasi pada Mc 4,80</td>
+                  <td class="num">33,9%</td>
+                  <td class="num">0,4646</td>
+                  <td class="num">9</td>
+                  <td class="num"><strong>18 / 20</strong> (vs #3)</td>
+                  <td class="num">0,9145</td>
+                </tr>
+                <tr>
+                  <td>5. Bobot Entropi Shannon (Mc 4,00)</td>
+                  <td class="num">76,1%</td>
+                  <td class="num">0,3846</td>
+                  <td class="num">0</td>
+                  <td class="num">Korelasi tinggi</td>
+                  <td class="num">0,9137</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="kpi-note">Bobot entropi memberikan <code>m_norm = 0,4824</code>, <code>n_norm = 0,3317</code>, <code>s_norm = 0,1673</code>, dan <code>b_inv = 0,0185</code> karena 23,9% sel memakai nilai b imputasi.</p>
+        </div>
+
+        <!-- Uji 4: Resolusi H3 (Res 4, 5, 6) -->
+        <div class="panel">
+          <h3 class="panel-title">Uji D: Pertukaran Resolusi Spasial H3 (Resolusi 4, 5, dan 6)</h3>
+          <p class="panel-subtitle">Resolusi 6 terlalu halus untuk kepadatan katalog saat ini: 64.185 sel gugur dan proporsi nilai b terukur jatuh ke 31,3%.</p>
+          <svg class="chart-svg" viewBox="0 0 560 155" width="560" height="155" role="img" aria-label="Grafik batang persentase sel dengan nilai b terukur per resolusi H3: Resolusi 4 sebesar 96,0%, Resolusi 5 sebesar 76,1%, Resolusi 6 sebesar 31,3%">
+            <line x1="175" y1="18" x2="520" y2="18" class="svg-gridline" />
+            <line x1="175" y1="56" x2="520" y2="56" class="svg-gridline" />
+            <line x1="175" y1="94" x2="520" y2="94" class="svg-gridline" />
+            <line x1="175" y1="122" x2="520" y2="122" class="svg-baseline" />
+
+            <!-- Res 4: 96.0% of 320px = 307px -->
+            <text x="165" y="34" text-anchor="end" class="svg-label">Res 4 (1.770,3 km&sup2; &middot; 2.144 sel)</text>
+            <rect x="175" y="22" width="307" height="18" fill="var(--data-mod)" />
+            <text x="488" y="35" class="svg-val">96,0%</text>
+
+            <!-- Res 5: 76.1% of 320px = 244px -->
+            <text x="165" y="72" text-anchor="end" class="svg-label">Res 5 (252,9 km&sup2; &middot; 7.017 sel)</text>
+            <rect x="175" y="60" width="244" height="18" fill="var(--data-accent)" />
+            <text x="425" y="73" class="svg-val">76,1% (dipilih)</text>
+
+            <!-- Res 6: 31.3% of 320px = 100px -->
+            <text x="165" y="110" text-anchor="end" class="svg-label">Res 6 (36,1 km&sup2; &middot; 7.102 sel)</text>
+            <rect x="175" y="98" width="100" height="18" fill="var(--data-low)" />
+            <text x="281" y="111" class="svg-val">31,3% (68,7% imputasi)</text>
+
+            <text x="175" y="142" class="svg-muted">0% b terukur</text>
+            <text x="335" y="142" text-anchor="middle" class="svg-muted">50% b terukur</text>
+            <text x="495" y="142" text-anchor="end" class="svg-muted">100%</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOK 7: Validasi Event Rujukan (6 Gempa Besar Bersejarah) -->
+    <section id="validasi-event" class="block-section" aria-labelledby="heading-validasi">
+      <div class="block-header">
+        <h2 id="heading-validasi" class="block-question">Bagaimana kinerja H3-SHI pada 6 gempa merusak bersejarah di Indonesia?</h2>
+        <p class="block-answer">
+          Lima dari enam episenter gempa besar jatuh di dalam sel aktif berstatus <em>High</em> (persentil ke-76 hingga ke-97 nasional). Namun validasi ini juga menyingkap temuan kritis pada katalog mentah: gempa megathrust Sumatra-Andaman 2004 (literatur Mw 9,1) hanya tercatat <strong>7,1 Mw(mB)</strong> (saturasi <strong>-2,0</strong> satuan), sementara sel episenter Nias 2005 (Mw 8,6; tercatat 7,7) memiliki kurang dari 10 gempa sehingga tersaring keluar oleh ambang <code>N_min = 10</code>.
+        </p>
+      </div>
+
+      <div class="panel" style="margin-bottom: 20px;">
+        <h3 class="panel-title">Perbandingan Magnitudo Literatur (Mw) vs Magnitudo Tercatat di Katalog</h3>
+        <p class="panel-subtitle">Selisih negatif terjadi akibat saturasi skala gelombang badan (mb/mB) pada gempa pra-2010 sebelum adopsi luas Mw murni.</p>
+        <svg class="chart-svg" viewBox="0 0 720 185" width="720" height="185" role="img" aria-label="Grafik perbandingan magnitudo literatur dan katalog untuk 6 gempa rujukan">
+          <line x1="190" y1="18" x2="680" y2="18" class="svg-gridline" />
+          <line x1="190" y1="68" x2="680" y2="68" class="svg-gridline" />
+          <line x1="190" y1="118" x2="680" y2="118" class="svg-gridline" />
+          <line x1="190" y1="154" x2="680" y2="154" class="svg-baseline" />
+
+          <!-- Skala X: Mag 5.0 di x=190 s.d. Mag 9.5 di x=640 (100px per 1.0 mag) -->
+          <!-- Aceh 2004: Lit 9.1 (x=600), Kat 7.1 (x=400) -->
+          <text x="180" y="32" text-anchor="end" class="svg-label">Sumatra-Andaman 2004</text>
+          <line x1="400" y1="28" x2="600" y2="28" stroke="var(--data-accent)" stroke-width="3" />
+          <circle cx="400" cy="28" r="4.5" fill="var(--ink-primary)" />
+          <circle cx="600" cy="28" r="4.5" fill="var(--data-accent)" />
+          <text x="610" y="32" class="svg-val">Kat 7,1 vs Lit 9,1 (-2,0)</text>
+
+          <!-- Nias 2005: Lit 8.6 (x=550), Kat 7.7 (x=460) -->
+          <text x="180" y="54" text-anchor="end" class="svg-label">Nias 2005 (sel &lt; 10 gempa)</text>
+          <line x1="460" y1="50" x2="550" y2="50" stroke="var(--data-accent)" stroke-width="3" />
+          <circle cx="460" cy="50" r="4.5" fill="var(--ink-primary)" />
+          <circle cx="550" cy="50" r="4.5" fill="var(--data-accent)" />
+          <text x="560" y="54" class="svg-val">Kat 7,7 vs Lit 8,6 (-0,9)</text>
+
+          <!-- Padang 2009: Lit 7.6 (x=450), Kat 7.1 (x=400) -->
+          <text x="180" y="76" text-anchor="end" class="svg-label">Padang 2009</text>
+          <line x1="400" y1="72" x2="450" y2="72" stroke="var(--data-high)" stroke-width="3" />
+          <circle cx="400" cy="72" r="4.5" fill="var(--ink-primary)" />
+          <circle cx="450" cy="72" r="4.5" fill="var(--data-accent)" />
+          <text x="460" y="76" class="svg-val">Kat 7,1 vs Lit 7,6 (-0,5)</text>
+
+          <!-- Yogyakarta 2006: Lit 6.3 (x=320), Kat 6.0 (x=290) -->
+          <text x="180" y="98" text-anchor="end" class="svg-label">Yogyakarta 2006</text>
+          <line x1="290" y1="94" x2="320" y2="94" stroke="var(--data-high)" stroke-width="3" />
+          <circle cx="290" cy="94" r="4.5" fill="var(--ink-primary)" />
+          <circle cx="320" cy="94" r="4.5" fill="var(--data-accent)" />
+          <text x="330" y="98" class="svg-val">Kat 6,0 vs Lit 6,3 (-0,3)</text>
+
+          <!-- Lombok 2018: Lit 6.9 (x=380), Kat 6.9 (x=380) -->
+          <text x="180" y="120" text-anchor="end" class="svg-label">Lombok 2018</text>
+          <circle cx="380" cy="116" r="5" fill="var(--ink-primary)" />
+          <text x="392" y="120" class="svg-val">Kat 6,9 = Lit 6,9 (0,0)</text>
+
+          <!-- Palu 2018: Lit 7.5 (x=440), Kat 7.5 (x=440) -->
+          <text x="180" y="142" text-anchor="end" class="svg-label">Palu 2018</text>
+          <circle cx="440" cy="138" r="5" fill="var(--ink-primary)" />
+          <text x="452" y="142" class="svg-val">Kat 7,5 = Lit 7,5 (0,0)</text>
+
+          <text x="190" y="172" class="svg-muted">Mag 5,0</text>
+          <text x="290" y="172" text-anchor="middle" class="svg-muted">6,0</text>
+          <text x="390" y="172" text-anchor="middle" class="svg-muted">7,0</text>
+          <text x="490" y="172" text-anchor="middle" class="svg-muted">8,0</text>
+          <text x="590" y="172" text-anchor="middle" class="svg-muted">9,0</text>
+          <text x="640" y="172" text-anchor="end" class="svg-muted">9,5</text>
+        </svg>
+      </div>
+
+      <div class="table-wrap">
+        <table aria-label="Tabel validasi 6 gempa besar bersejarah terhadap sel H3">
+          <thead>
+            <tr>
+              <th scope="col">Peristiwa Gempa</th>
+              <th scope="col" class="num">Koordinat</th>
+              <th scope="col" class="num">Mw Lit.</th>
+              <th scope="col" class="num">Mag Kat. (Tipe)</th>
+              <th scope="col" class="num">Selisih</th>
+              <th scope="col">Indeks H3 &amp; Status Sel</th>
+              <th scope="col" class="num">Gempa Sel</th>
+              <th scope="col" class="num">Mag Maks</th>
+              <th scope="col" class="num">Nilai b Sel</th>
+              <th scope="col" class="num">Skor SHI Sel</th>
+              <th scope="col" class="num">Persentil (Tier)</th>
+              <th scope="col" class="num">Maks 1-Ring</th>
+              <th scope="col">Pemicu Risiko Sel</th>
+            </tr>
+          </thead>
+          <tbody id="ref-events-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BLOK 8: Keterbatasan Metodologis & Data -->
+    <section id="keterbatasan" class="block-section" aria-labelledby="heading-keterbatasan">
+      <div class="block-header">
+        <h2 id="heading-keterbatasan" class="block-question">Apa keterbatasan utama yang wajib diperhatikan saat menginterpretasikan H3-SHI?</h2>
+        <p class="block-answer">
+          H3-SHI dirancang sebagai indeks bahaya seismik historis berbasis katalog titik episenter (bukan model probabilistik pergerakan tanah PSHA). Empat keterbatasan struktural di bawah ini dicatat secara transparan dari hasil audit data.
+        </p>
+      </div>
+
+      <ul class="limitations-list">
+        <li class="limitation-item">
+          <h3>Saturasi skala magnitudo pra-Mw (26 tipe skala dicampur)</h3>
+          <p>
+            Katalog menggabungkan 26 tipe magnitudo berbeda: didominasi <code>MLv</code> (132.456 event / 42,2%) dan <code>mb</code> (95.448 event / 30,4%), sementara <code>Mw</code> murni hanya berjumlah <strong>1.344 event (0,43%)</strong>. Skala gelombang badan mengalami saturasi di atas M ~6,5, sehingga gempa Sumatra-Andaman 2004 (Mw 9,1) tercatat 7,1 <code>Mw(mB)</code> dan magnitudo maksimum seluruh katalog terpotong pada angka 7,90.
+          </p>
+        </li>
+        <li class="limitation-item">
+          <h3>Perbedaan sistematis nilai b antar-skala magnitudo</h3>
+          <p>
+            Estimasi <em>b-value</em> global pada himpunan bagian <code>MLv</code> adalah <strong>1,1835</strong>, sedangkan pada <code>mb</code> adalah <strong>0,6297</strong> (uji Kolmogorov-Smirnov <em>p</em> &lt; 10<sup>-16</sup>). Pencampuran skala ini tidak membiaskan perbandingan spasial secara ekstrem hanya karena hampir seluruh sel (median porsi <code>mb</code> + <code>MLv</code> = 85,2%) mencampur kedua tipe skala dengan proporsi median rasio <code>mb</code> sekitar 50,0% (IQR 27,8% s.d. 76,5%).
+          </p>
+        </li>
+        <li class="limitation-item">
+          <h3>Efek lantai ambang absolut (0 sel Low, 76,26% sel High)</h3>
+          <p>
+            Penyaringan <code>N_min = 10</code> memastikan setiap sel aktif memiliki densitas minimum, ditambah rasio gempa dangkal nasional (0,7731) dan nilai <code>b_inv</code> rata-rata (0,8484). Akibatnya, sel aktif beraktivitas rendah pun memiliki lantai skor SHI sekitar 0,39 (minimum aktual 0,2733), sehingga kategori <em>Low</em> (&lt; 0,25) kosong. Gunakan <strong>Tier Kuartil (Q1 s.d. Q4)</strong> untuk pemeringkatan relatif antar-wilayah.
+          </p>
+        </li>
+        <li class="limitation-item">
+          <h3>Representasi titik episenter vs robekan sesar memanjang (Kasus Aceh 2004 &amp; Nias 2005)</h3>
+          <p>
+            Katalog hanya menyimpan satu titik koordinat awal robekan (hiposenter), padahal megathrust Aceh 2004 merobek segmen sepanjang ~1.300 km yang melintasi puluhan sel H3 Resolusi 5 (~17 km per sel). Sel episenter awal Aceh (<code>856555c3fffffff</code>) hanya memuat 13 gempa (SHI 0,6320, maks 1-ring 0,7029), dan sel episenter Nias 2005 memuat &lt; 10 gempa sehingga tersaring keluar. Selain itu, dengan bobot setara 0,25 per kanal, gempa magnitudo besar dengan frekuensi susulan moderat memiliki batas atas struktural di bawah kategori <em>Very High</em>.
+          </p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- BLOK 9: Tautan ke Peta Lengkap & Catatan Kaki -->
+    <footer id="peta-lengkap" class="site-footer">
+      <div>
+        <strong>Kelompok 8 &middot; Proyek Analisis Big Data Seismisitas Indonesia</strong><br>
+        <span>Data sumber: Katalog Gempa Indonesia 1960 s.d. 2024 (314.023 kejadian tersaring; 7.017 sel H3 Resolusi 5). Seluruh angka bersumber langsung dari keluaran eksekusi buku catatan analisis.</span>
+      </div>
+      <div>
+        <a href="indonesia_seismic_hazard_map.html" class="btn-link btn-primary-link">
+          Buka Peta Choropleth Lengkap (indonesia_seismic_hazard_map.html)
+        </a>
+      </div>
+    </footer>
+  </main>
+  <script>
+    const NATIONAL_MEANS = {
+      n_norm: 0.4181,
+      s_norm: 0.7617,
+      b_inv: 0.8484,
+      m_norm: 0.2130,
+      shi: 0.5603
+    };
+
+    const IDN_SVG_PATH = "M36,63L32,60L27,58L32,56L35,60ZM62,65L57,64L55,59L54,54L50,51L47,47L44,43L39,41L34,38L31,34L27,30L23,27L20,22L18,17L21,13L26,14L30,17L35,19L40,19L45,19L50,20L55,21L59,24L60,29L64,32L61,36L58,40L59,45L59,50L60,55L61,60L62,65ZM321,226L318,230L315,226L311,223L307,220L312,220L317,219L322,220L326,223L322,226ZM210,146L205,145L204,140L207,136L212,137L214,142L211,146ZM187,143L182,141L179,137L177,132L173,129L168,129L171,124L174,120L177,124L181,121L182,126L183,131L186,135L191,136L189,141ZM186,202L181,201L176,200L171,200L174,196L177,192L180,188L185,187L190,188L192,193L187,193L186,198ZM144,171L139,169L135,165L131,162L127,159L124,155L121,151L117,148L113,145L110,139L106,135L110,132L113,136L118,138L122,141L127,143L129,148L134,148L131,152L132,157L136,160L141,162L144,166L144,171ZM443,91L438,92L433,90L428,90L423,90L418,91L413,89L408,88L412,85L417,83L422,82L427,83L432,85L437,84L440,88ZM118,138L113,136L110,132L108,127L111,123L115,120L118,115L121,111L126,113L131,114L134,110L139,109L144,111L149,112L154,113L157,117L157,122L152,124L147,125L143,128L142,133L139,129L136,133L132,136L127,138L122,138ZM212,214L207,213L202,211L197,210L192,209L187,208L188,203L187,198L187,193L192,193L195,189L200,187L204,190L209,191L214,191L218,195L220,200L221,205L221,210L217,213L212,214ZM240,216L235,214L230,213L225,213L221,210L218,206L222,203L225,199L230,201L235,200L240,201L245,201L249,198L252,194L257,197L262,198L264,203L261,207L257,210L259,215L256,219L251,218L248,214L243,212L240,216ZM287,206L282,205L285,201L290,201L295,201L300,201L296,204L291,206ZM261,222L256,221L257,216L258,211L257,206L262,208L264,203L267,199L272,201L277,201L280,205L283,209L286,213L291,214L296,213L301,212L306,214L306,219L305,224L309,227L304,227L299,227L295,224L290,223L285,222L280,224L275,223L270,222L265,222ZM253,141L248,140L243,141L242,136L242,131L241,126L241,121L239,116L236,112L234,107L229,106L226,102L228,97L225,93L224,88L225,83L225,78L228,73L230,68L235,66L234,71L237,75L241,78L244,82L248,85L253,83L258,82L263,82L268,82L272,79L275,75L280,74L285,74L289,77L294,78L299,76L302,80L298,83L298,88L294,91L289,94L292,98L289,102L285,105L280,107L275,108L270,108L266,111L263,115L259,119L254,121L255,126L256,131L257,136L254,140ZM331,159L331,154L331,149L335,152L334,157ZM311,160L309,155L308,150L307,145L309,140L312,136L316,133L320,130L320,125L321,119L326,118L325,123L326,128L328,133L333,132L338,134L333,135L336,140L331,140L334,144L331,148L328,152L323,154L318,156L313,159ZM267,150L267,145L266,140L261,141L256,143L251,142L255,139L257,134L256,129L255,124L257,119L261,116L264,112L269,111L272,107L277,108L282,106L287,105L290,101L291,96L294,92L297,88L302,87L306,90L310,87L315,86L316,91L312,94L314,99L319,98L319,103L321,108L324,112L328,115L324,118L320,122L321,127L318,131L314,134L311,138L308,142L306,147L301,148L296,150L294,145L289,146L286,142L283,146L279,149L274,147L269,150ZM333,132L328,132L326,127L325,122L326,117L325,112L321,109L319,104L319,99L314,100L312,95L316,92L315,87L310,87L306,90L302,87L298,84L301,80L304,76L309,76L312,80L317,81L322,79L327,77L331,74L333,69L335,64L339,61L344,60L349,59L354,60L359,62L355,65L358,69L362,73L366,76L370,79L374,82L370,85L365,85L360,83L356,86L354,91L353,96L352,101L351,106L348,110L345,114L341,117L338,121L334,124L337,128L338,134L333,132ZM322,79L318,82L313,79L309,76L311,71L312,66L315,62L319,59L316,55L320,52L323,48L324,43L324,38L327,34L332,33L337,33L342,32L347,33L352,34L352,39L349,43L344,43L348,46L349,51L350,56L345,56L350,56L355,56L359,60L354,60L349,59L344,60L339,61L335,64L333,69L331,74L327,77L322,79ZM214,41L210,38L213,34L216,38L214,43ZM158,182L161,186L156,183L152,180L149,176L146,172L151,171L156,170L155,165L158,161L163,161L167,158L170,154L174,157L177,161L179,166L178,171L178,176L177,181L176,186L172,183L169,179L168,184L163,182L158,180ZM477,218L479,213L484,213L489,211L493,214L488,215L483,216L478,217ZM560,217L557,213L560,209L563,205L566,209L563,213L560,217ZM603,201L601,195L602,190L605,194L606,199ZM488,154L483,152L480,148L484,144L489,144L494,144L497,148L498,153L493,154L488,154ZM532,149L527,148L522,146L518,149L514,146L510,149L509,444L509,144L512,140L517,140L522,140L527,142L531,139L536,140L541,143L546,142L549,146L553,149L553,154L548,153L543,151L539,148L534,147ZM609,193L605,190L608,186L612,189L609,193ZM605,188L603,183L607,180L610,184L607,188ZM480,126L475,126L470,125L475,125L480,124L485,125L480,126ZM456,128L456,123L461,122L466,124L461,126L456,128ZM503,123L503,118L508,119L512,122L507,123ZM519,65L514,67L514,62L518,59L519,64ZM504,109L500,106L503,102L504,107L509,109L504,109ZM506,102L505,97L506,92L503,88L502,83L501,78L503,73L506,68L509,64L508,69L510,74L509,79L505,82L509,85L512,81L513,76L518,74L521,78L518,83L513,85L517,88L520,92L515,92L510,90L509,95L509,100L511,105L514,109L510,106L507,102ZM329,230L331,225L334,221L339,222L339,227L336,231L331,231ZM344,233L341,229L344,225L349,223L354,224L357,228L362,227L358,224L357,219L362,219L365,223L370,222L375,222L376,227L371,228L367,231L362,230L357,231L352,233L347,233ZM433,261L437,258L441,255L438,259L433,261ZM442,252L446,249L445,244L448,240L453,239L457,236L461,233L466,233L466,238L464,243L460,246L457,250L452,250L448,253L443,252ZM393,251L389,248L385,245L380,244L375,243L377,238L382,238L387,238L392,240L397,242L400,246L401,251L396,252ZM458,224L457,219L462,220L467,220L463,223L458,224ZM439,225L442,221L447,220L444,224L439,226ZM410,231L405,232L400,231L395,230L390,230L387,226L391,223L396,222L401,222L406,224L411,226L416,225L421,225L426,227L429,223L434,221L433,226L428,227L423,229L418,230L413,230ZM673,218L669,221L665,224L660,223L655,224L656,219L659,214L662,210L667,208L672,208L676,211L674,216ZM674,221L674,216L677,212L674,208L670,205L670,200L669,195L666,191L664,186L661,182L658,178L654,175L649,173L644,171L639,170L635,167L630,166L625,165L620,164L615,163L616,158L619,154L613,152L609,139L613,142L614,147L619,148L624,146L628,143L630,138L634,135L637,131L642,131L647,129L647,124L652,122L657,120L662,122L667,124L672,126L677,128L682,130L686,133L691,133L696,134L701,135L705,177L705,192L703,197L705,207L705,214L705,222L705,234L701,231L698,227L694,224L690,221L685,219L680,221L675,220ZM632,115L627,114L626,109L621,109L626,108L631,110L635,113ZM632,125L627,124L622,123L627,122L632,122L637,123L642,124L637,126L632,125ZM587,158L582,157L581,152L582,147L578,144L574,141L578,138L584,138L587,134L592,135L597,135L599,130L594,131L589,131L584,132L579,132L574,132L571,128L570,123L565,121L560,118L555,119L558,115L559,110L564,109L569,107L573,104L578,103L583,104L588,106L592,109L597,108L602,110L602,115L603,120L601,125L602,130L604,135L606,140L607,135L611,148L615,152L617,157L613,161L610,157L615,157L610,156L605,156L601,153L596,153L595,148L598,144L595,148L592,152L590,157ZM547,128L542,128L537,127L541,123L546,123L546,128ZM554,117L550,114L554,111L555,116ZM554,103L549,102L544,101L548,98L553,98L558,99L555,103L551,100ZM126,113L121,111L116,112L112,109L108,106L105,102L101,99L103,94L98,93L94,90L92,85L93,80L94,75L94,70L95,65L95,60L98,65L103,67L106,63L109,67L111,72L116,72L120,75L122,80L125,84L130,86L135,88L133,93L138,91L143,91L146,95L143,99L138,102L142,106L138,109L133,111L129,114ZM133,86L128,86L131,82L135,85ZM375,151L373,146L373,141L375,136L377,131L380,127L379,122L380,117L382,112L383,117L386,121L388,126L385,131L386,136L383,140L383,145L382,150L377,150ZM384,182L380,179L381,174L382,169L384,164L384,159L382,154L382,149L383,144L384,139L385,134L386,129L391,127L396,127L400,130L405,131L410,133L415,135L416,140L412,143L408,140L404,137L399,138L395,141L396,146L396,151L395,156L396,161L396,166L395,171L394,176L397,180L392,181L387,183ZM433,122L432,117L437,115L442,117L439,121L434,121ZM426,145L421,143L416,141L416,136L411,134L406,132L401,131L397,128L392,128L388,125L385,121L382,117L383,112L386,108L386,103L385,98L388,94L391,90L394,85L399,86L402,82L403,77L408,78L412,81L417,81L422,81L417,83L412,85L407,87L406,92L401,91L396,90L393,94L390,99L391,104L392,109L396,112L399,116L403,119L408,118L410,113L414,110L419,112L423,109L428,109L433,109L437,106L442,108L441,113L437,110L432,111L429,115L426,119L422,122L417,123L414,127L410,124L413,128L417,131L420,135L422,140L425,144ZM431,183L429,178L432,174L433,169L434,164L438,167L435,171L434,176L433,181ZM429,178L424,178L426,173L427,168L431,171L429,176ZM423,165L421,170L416,170L412,167L413,162L411,157L407,154L403,151L405,146L406,141L411,142L416,141L421,142L425,145L425,150L427,155L430,159L434,162L430,165L425,164ZM444,93L442,88L438,85L443,84L448,85L453,83L457,80L460,76L464,73L469,75L466,79L463,83L459,86L458,91L453,92L448,92ZM95,92L100,94L103,98L103,103L107,106L111,109L116,111L117,116L115,121L110,123L107,127L109,132L105,135L102,130L102,125L99,120L96,116L95,111L92,107L89,103L86,99L82,96L78,93L82,90L87,90L88,85L93,86L94,91ZM79,124L74,123L71,119L70,114L74,111L76,116L78,121ZM150,171L146,168L142,165L139,161L134,159L131,155L132,150L128,147L125,143L121,140L125,137L130,137L133,133L138,132L143,130L144,125L149,124L154,124L158,127L163,128L161,133L166,133L171,133L174,137L177,141L181,144L178,149L178,154L178,159L174,156L170,153L167,157L164,161L159,161L155,164L155,169L150,171ZM57,89L54,85L50,81L47,77L52,75L55,79L59,82L58,87ZM72,72L68,69L64,66L62,61L61,56L59,51L59,46L57,41L61,38L62,33L65,37L70,39L74,42L78,45L82,48L87,50L90,54L92,59L95,63L95,68L96,73L93,77L92,82L87,84L89,89L84,89L80,92L76,88L74,82L73,77L72,72ZM253,220L248,220L243,217L242,212L247,211L250,215L252,220Z".replace("L509,444", "");
+
+    const TOP_20 = [
+      { rank: 1, h3_index: "8568c9affffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.6919, centroid_lon: 126.4585, total_events: 276, n_mc: 130, shallow_events: 269, shallow_ratio: 0.9676, default_depth_events: 122, default_depth_share: 0.4420, max_magnitude: 6.7, mean_magnitude: 4.0116, b_value: 0.6143, b_value_imputed: 0.6143, b_std_error: 0.0230, b_estimated: true, b_reliable: true, n_norm: 0.9594, s_norm: 0.9676, b_inv: 0.9238, m_norm: 0.4909, shi: 0.8354, shi_entropy: 0.7341, shi_rank_pct: 1.0000, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 2, h3_index: "8568c9abfffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.6642, centroid_lon: 126.2991, total_events: 177, n_mc: 81, shallow_events: 172, shallow_ratio: 0.9611, default_depth_events: 82, default_depth_share: 0.4633, max_magnitude: 7.2, mean_magnitude: 4.0299, b_value: 0.6049, b_value_imputed: 0.6049, b_std_error: 0.0256, b_estimated: true, b_reliable: true, n_norm: 0.8672, s_norm: 0.9611, b_inv: 0.9300, m_norm: 0.5818, shi: 0.8351, shi_entropy: 0.7464, shi_rank_pct: 0.9999, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "magnitudo maksimum" },
+      { rank: 3, h3_index: "8568c9a7fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.8467, centroid_lon: 126.5132, total_events: 208, n_mc: 104, shallow_events: 201, shallow_ratio: 0.9575, default_depth_events: 70, default_depth_share: 0.3365, max_magnitude: 6.8, mean_magnitude: 4.0721, b_value: 0.6031, b_value_imputed: 0.6031, b_std_error: 0.0248, b_estimated: true, b_reliable: true, n_norm: 0.9159, s_norm: 0.9575, b_inv: 0.9313, m_norm: 0.5091, shi: 0.8284, shi_entropy: 0.7269, shi_rank_pct: 0.9997, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 4, h3_index: "8568c93bfffffff", province: "Maluku Utara", location_type: "onshore", centroid_lat: 1.3827, centroid_lon: 126.3490, total_events: 204, n_mc: 112, shallow_events: 197, shallow_ratio: 0.9567, default_depth_events: 71, default_depth_share: 0.3480, max_magnitude: 6.7, mean_magnitude: 4.0985, b_value: 0.6166, b_value_imputed: 0.6166, b_std_error: 0.0253, b_estimated: true, b_reliable: true, n_norm: 0.9303, s_norm: 0.9567, b_inv: 0.9223, m_norm: 0.4909, shi: 0.8251, shi_entropy: 0.7226, shi_rank_pct: 0.9996, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 5, h3_index: "8568c9b7fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.9737, centroid_lon: 126.4086, total_events: 89, n_mc: 60, shallow_events: 87, shallow_ratio: 0.9569, default_depth_events: 24, default_depth_share: 0.2697, max_magnitude: 7.1, mean_magnitude: 4.4135, b_value: 0.5908, b_value_imputed: 0.5908, b_std_error: 0.0297, b_estimated: true, b_reliable: true, n_norm: 0.8090, s_norm: 0.9569, b_inv: 0.9394, m_norm: 0.5636, shi: 0.8172, shi_entropy: 0.7178, shi_rank_pct: 0.9994, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "magnitudo maksimum" },
+      { rank: 6, h3_index: "8573b26bfffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 2.0015, centroid_lon: 126.5681, total_events: 116, n_mc: 79, shallow_events: 114, shallow_ratio: 0.9661, default_depth_events: 33, default_depth_share: 0.2845, max_magnitude: 6.7, mean_magnitude: 4.3802, b_value: 0.5872, b_value_imputed: 0.5872, b_std_error: 0.0276, b_estimated: true, b_reliable: true, n_norm: 0.8624, s_norm: 0.9661, b_inv: 0.9419, m_norm: 0.4909, shi: 0.8153, shi_entropy: 0.7020, shi_rank_pct: 0.9993, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "magnitudo maksimum" },
+      { rank: 7, h3_index: "8568cb37fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 0.4845, centroid_lon: 126.1805, total_events: 122, n_mc: 65, shallow_events: 119, shallow_ratio: 0.9601, default_depth_events: 50, default_depth_share: 0.4098, max_magnitude: 7.0, mean_magnitude: 4.0516, b_value: 0.6144, b_value_imputed: 0.6144, b_std_error: 0.0360, b_estimated: true, b_reliable: true, n_norm: 0.8245, s_norm: 0.9601, b_inv: 0.9237, m_norm: 0.5455, shi: 0.8134, shi_entropy: 0.7144, shi_rank_pct: 0.9991, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "magnitudo maksimum" },
+      { rank: 8, h3_index: "8568c933fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.5372, centroid_lon: 126.4037, total_events: 301, n_mc: 154, shallow_events: 296, shallow_ratio: 0.9766, default_depth_events: 140, default_depth_share: 0.4651, max_magnitude: 6.0, mean_magnitude: 4.0870, b_value: 0.6198, b_value_imputed: 0.6198, b_std_error: 0.0240, b_estimated: true, b_reliable: true, n_norm: 0.9925, s_norm: 0.9766, b_inv: 0.9202, m_norm: 0.3636, shi: 0.8132, shi_entropy: 0.6851, shi_rank_pct: 0.9990, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 9, h3_index: "8568c9a3fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.8189, centroid_lon: 126.3538, total_events: 190, n_mc: 96, shallow_events: 187, shallow_ratio: 0.9736, default_depth_events: 79, default_depth_share: 0.4158, max_magnitude: 6.4, mean_magnitude: 4.0426, b_value: 0.6032, b_value_imputed: 0.6032, b_std_error: 0.0268, b_estimated: true, b_reliable: true, n_norm: 0.9003, s_norm: 0.9736, b_inv: 0.9312, m_norm: 0.4364, shi: 0.8104, shi_entropy: 0.6893, shi_rank_pct: 0.9989, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 10, h3_index: "8573b277fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 2.3115, centroid_lon: 126.6779, total_events: 132, n_mc: 83, shallow_events: 124, shallow_ratio: 0.9277, default_depth_events: 24, default_depth_share: 0.1818, max_magnitude: 6.6, mean_magnitude: 4.3280, b_value: 0.5741, b_value_imputed: 0.5741, b_std_error: 0.0267, b_estimated: true, b_reliable: true, n_norm: 0.8720, s_norm: 0.9277, b_inv: 0.9506, m_norm: 0.4727, shi: 0.8057, shi_entropy: 0.6902, shi_rank_pct: 0.9987, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 11, h3_index: "8568c963fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.0739, centroid_lon: 126.2397, total_events: 99, n_mc: 63, shallow_events: 96, shallow_ratio: 0.9516, default_depth_events: 20, default_depth_share: 0.2020, max_magnitude: 6.8, mean_magnitude: 4.2939, b_value: 0.6113, b_value_imputed: 0.6113, b_std_error: 0.0273, b_estimated: true, b_reliable: true, n_norm: 0.8185, s_norm: 0.9516, b_inv: 0.9258, m_norm: 0.5091, shi: 0.8013, shi_entropy: 0.6935, shi_rank_pct: 0.9986, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "magnitudo maksimum" },
+      { rank: 12, h3_index: "8573b267fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 2.1845, centroid_lon: 126.7828, total_events: 136, n_mc: 80, shallow_events: 127, shallow_ratio: 0.9228, default_depth_events: 37, default_depth_share: 0.2721, max_magnitude: 6.6, mean_magnitude: 4.1434, b_value: 0.5845, b_value_imputed: 0.5845, b_std_error: 0.0268, b_estimated: true, b_reliable: true, n_norm: 0.8648, s_norm: 0.9228, b_inv: 0.9437, m_norm: 0.4727, shi: 0.8010, shi_entropy: 0.6868, shi_rank_pct: 0.9984, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 13, h3_index: "8568cbb7fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 0.8925, centroid_lon: 126.0264, total_events: 170, n_mc: 87, shallow_events: 165, shallow_ratio: 0.9596, default_depth_events: 62, default_depth_share: 0.3647, max_magnitude: 6.2, mean_magnitude: 3.9724, b_value: 0.6416, b_value_imputed: 0.6416, b_std_error: 0.0331, b_estimated: true, b_reliable: true, n_norm: 0.8811, s_norm: 0.9596, b_inv: 0.9056, m_norm: 0.4000, shi: 0.7866, shi_entropy: 0.6626, shi_rank_pct: 0.9983, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 14, h3_index: "8568c977fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.2282, centroid_lon: 126.2944, total_events: 153, n_mc: 84, shallow_events: 145, shallow_ratio: 0.9370, default_depth_events: 34, default_depth_share: 0.2222, max_magnitude: 6.2, mean_magnitude: 4.1379, b_value: 0.6033, b_value_imputed: 0.6033, b_std_error: 0.0265, b_estimated: true, b_reliable: true, n_norm: 0.8743, s_norm: 0.9370, b_inv: 0.9311, m_norm: 0.4000, shi: 0.7856, shi_entropy: 0.6570, shi_rank_pct: 0.9981, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 15, h3_index: "8568c97bfffffff", province: "Maluku Utara", location_type: "onshore", centroid_lat: 1.0466, centroid_lon: 126.0808, total_events: 140, n_mc: 82, shallow_events: 137, shallow_ratio: 0.9649, default_depth_events: 36, default_depth_share: 0.2571, max_magnitude: 6.1, mean_magnitude: 4.1964, b_value: 0.6126, b_value_imputed: 0.6126, b_std_error: 0.0300, b_estimated: true, b_reliable: true, n_norm: 0.8696, s_norm: 0.9649, b_inv: 0.9249, m_norm: 0.3818, shi: 0.7853, shi_entropy: 0.6513, shi_rank_pct: 0.9980, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 16, h3_index: "8573b0c7fffffff", province: "Sulawesi Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 3.7510, centroid_lon: 126.5880, total_events: 108, n_mc: 81, shallow_events: 99, shallow_ratio: 0.9045, default_depth_events: 15, default_depth_share: 0.1389, max_magnitude: 6.6, mean_magnitude: 4.4130, b_value: 0.6696, b_value_imputed: 0.6696, b_std_error: 0.0283, b_estimated: true, b_reliable: true, n_norm: 0.8672, s_norm: 0.9045, b_inv: 0.8869, m_norm: 0.4727, shi: 0.7828, shi_entropy: 0.6835, shi_rank_pct: 0.9979, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 17, h3_index: "8573b01bfffffff", province: "Sulawesi Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 3.6243, centroid_lon: 126.6931, total_events: 167, n_mc: 123, shallow_events: 156, shallow_ratio: 0.9250, default_depth_events: 33, default_depth_share: 0.1976, max_magnitude: 6.1, mean_magnitude: 4.3455, b_value: 0.6864, b_value_imputed: 0.6864, b_std_error: 0.0290, b_estimated: true, b_reliable: true, n_norm: 0.9486, s_norm: 0.9250, b_inv: 0.8758, m_norm: 0.3818, shi: 0.7828, shi_entropy: 0.6699, shi_rank_pct: 0.9977, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 18, h3_index: "8568c90ffffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 1.3552, centroid_lon: 126.1899, total_events: 119, n_mc: 66, shallow_events: 112, shallow_ratio: 0.9281, default_depth_events: 36, default_depth_share: 0.3025, max_magnitude: 6.4, mean_magnitude: 4.1664, b_value: 0.5917, b_value_imputed: 0.5917, b_std_error: 0.0286, b_estimated: true, b_reliable: true, n_norm: 0.8275, s_norm: 0.9281, b_inv: 0.9388, m_norm: 0.4364, shi: 0.7827, shi_entropy: 0.6577, shi_rank_pct: 0.9976, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 19, h3_index: "8573b223fffffff", province: "Maluku Utara", location_type: "offshore (provinsi terdekat)", centroid_lat: 2.4948, centroid_lon: 126.8928, total_events: 158, n_mc: 81, shallow_events: 156, shallow_ratio: 0.9746, default_depth_events: 58, default_depth_share: 0.3671, max_magnitude: 6.2, mean_magnitude: 4.0228, b_value: 0.6748, b_value_imputed: 0.6748, b_std_error: 0.0328, b_estimated: true, b_reliable: true, n_norm: 0.8672, s_norm: 0.9746, b_inv: 0.8835, m_norm: 0.4000, shi: 0.7813, shi_entropy: 0.6601, shi_rank_pct: 0.9974, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" },
+      { rank: 20, h3_index: "8572f343fffffff", province: "Papua", location_type: "onshore", centroid_lat: -2.5562, centroid_lon: 140.5812, total_events: 268, n_mc: 90, shallow_events: 266, shallow_ratio: 0.9846, default_depth_events: 84, default_depth_share: 0.3134, max_magnitude: 5.5, mean_magnitude: 3.2149, b_value: 0.5336, b_value_imputed: 0.5336, b_std_error: 0.0322, b_estimated: true, b_reliable: true, n_norm: 0.8877, s_norm: 0.9846, b_inv: 0.9776, m_norm: 0.2727, shi: 0.7807, shi_entropy: 0.6089, shi_rank_pct: 0.9973, hazard_level: "Very High", hazard_quartile: "Q4 (tertinggi)", risk_driver: "densitas event" }
+    ];
+
+    const REFERENCE_EVENTS = [
+      { event: "Sumatra-Andaman 2004-12-26", lat: 3.295, lon: 95.982, mw_lit: 9.1, mag_kat: 7.1, mag_type: "Mw(mB)", diff: -2.0, h3_index: "856555c3fffffff", sel_ada: true, total_events: 13, n_mc: 7, max_mag_sel: 5.5, b_val: 0.5830, b_terukur: true, shi: 0.6320, pct: 81.25, tier: "High", shi_1ring: 0.7029, driver: "nilai b rendah (tegangan)" },
+      { event: "Nias 2005-03-28", lat: 2.085, lon: 97.108, mw_lit: 8.6, mag_kat: 7.7, mag_type: "Mw(mB)", diff: -0.9, h3_index: "856546affffffff", sel_ada: false, total_events: null, n_mc: null, max_mag_sel: null, b_val: null, b_terukur: null, shi: null, pct: null, tier: null, shi_1ring: 0.6481, driver: null },
+      { event: "Yogyakarta 2006-05-26", lat: -7.961, lon: 110.446, mw_lit: 6.3, mag_kat: 6.0, mag_type: "mb", diff: -0.3, h3_index: "858dab4bfffffff", sel_ada: true, total_events: 316, n_mc: 12, max_mag_sel: 5.9, b_val: 0.7014, b_terukur: false, shi: 0.6634, pct: 89.77, tier: "High", shi_1ring: 0.6634, driver: "magnitudo maksimum" },
+      { event: "Padang 2009-09-30", lat: -0.720, lon: 99.867, mw_lit: 7.6, mag_kat: 7.1, mag_type: "mb", diff: -0.5, h3_index: "858cdec7fffffff", sel_ada: true, total_events: 49, n_mc: 12, max_mag_sel: 5.3, b_val: 0.6418, b_terukur: true, shi: 0.6181, pct: 76.13, tier: "High", shi_1ring: 0.6482, driver: "nilai b rendah (tegangan)" },
+      { event: "Lombok 2018-08-05", lat: -8.258, lon: 116.438, mw_lit: 6.9, mag_kat: 6.9, mag_type: "M", diff: 0.0, h3_index: "8595a583fffffff", sel_ada: true, total_events: 219, n_mc: 19, max_mag_sel: 6.8, b_val: 0.7917, b_terukur: true, shi: 0.7170, pct: 97.24, tier: "High", shi_1ring: 0.7360, driver: "magnitudo maksimum" },
+      { event: "Palu 2018-09-28", lat: -0.256, lon: 119.846, mw_lit: 7.5, mag_kat: 7.5, mag_type: "Mw", diff: 0.0, h3_index: "8568d46ffffffff", sel_ada: true, total_events: 80, n_mc: 9, max_mag_sel: 7.5, b_val: 0.7357, b_terukur: true, shi: 0.7185, pct: 97.31, tier: "High", shi_1ring: 0.7185, driver: "magnitudo maksimum" }
+    ];
+
+    // Formatters (Indonesian decimal comma)
+    function fmtDec(val, digits = 4) {
+      if (val === null || val === undefined || Number.isNaN(val)) return "-";
+      return Number(val).toFixed(digits).replace(".", ",");
+    }
+
+    function fmtInt(val) {
+      if (val === null || val === undefined) return "-";
+      return Number(val).toLocaleString("id-ID");
+    }
+
+    function fmtCoord(lat, lon) {
+      const ns = lat >= 0 ? "LU" : "LS";
+      return `${fmtDec(Math.abs(lat), 2)}° ${ns}, ${fmtDec(lon, 2)}° BT`;
+    }
+
+    function fmtLocType(loc) {
+      return loc === "onshore" ? "Daratan" : "Lepas pantai";
+    }
+
+    // Application State
+    let selectedH3 = TOP_20[0].h3_index;
+    let activeProvince = "ALL";
+    let searchQuery = "";
+    let sortKey = "rank";
+    let sortAsc = true;
+    let uiMode = "normal"; // normal | loading | error
+
+    // DOM Elements
+    const themeToggleBtn = document.getElementById("theme-toggle");
+    const cellSelector = document.getElementById("cell-selector");
+    const questionCellId = document.getElementById("question-cell-id");
+    const questionCellRank = document.getElementById("question-cell-rank");
+    const channelNarrative = document.getElementById("channel-narrative");
+    const channelSvg = document.getElementById("channel-svg");
+    const selectedCellDetails = document.getElementById("selected-cell-details");
+    const overviewMapSvg = document.getElementById("overview-map-svg");
+    const top20Tbody = document.getElementById("top20-tbody");
+    const top20TableWrap = document.getElementById("top20-table-wrap");
+    const top20StateContainer = document.getElementById("top20-state-container");
+    const refEventsTbody = document.getElementById("ref-events-tbody");
+    const tableSearchInput = document.getElementById("table-search");
+
+    // Populate Dropdown
+    function initDropdown() {
+      cellSelector.innerHTML = TOP_20.map(c =>
+        `<option value="${c.h3_index}">#${c.rank} - ${c.h3_index} (${c.province}, SHI ${fmtDec(c.shi, 4)})</option>`
+      ).join("");
+    }
+
+    // Render Channel Comparison SVG & Details
+    function renderSelectedCell() {
+      const cell = TOP_20.find(c => c.h3_index === selectedH3) || TOP_20[0];
+      cellSelector.value = cell.h3_index;
+      questionCellId.textContent = cell.h3_index;
+      questionCellRank.textContent = `#${cell.rank}`;
+
+      channelNarrative.innerHTML = `Sel <strong>#${cell.rank}</strong> (<code>${cell.h3_index}</code>) di <strong>${cell.province}</strong> (${fmtLocType(cell.location_type)}) memiliki skor <strong>SHI ${fmtDec(cell.shi, 4)}</strong> dengan pemicu utama <strong>${cell.risk_driver}</strong>. Sel ini mencatat <strong>${fmtInt(cell.total_events)} gempa</strong> (${fmtInt(cell.n_mc)} gempa &ge; Mc 4,0; magnitudo maks ${fmtDec(cell.max_magnitude, 1)}; nilai <em>b</em> terukur ${fmtDec(cell.b_value_imputed, 4)}).`;
+
+      // Update quick buttons
+      document.querySelectorAll(".quick-cell-btn").forEach(btn => {
+        btn.setAttribute("aria-pressed", btn.dataset.h3 === cell.h3_index ? "true" : "false");
+      });
+
+      const channels = [
+        { key: "n_norm", label: "n_norm (Densitas log >= Mc)", val: cell.n_norm, mean: NATIONAL_MEANS.n_norm },
+        { key: "s_norm", label: "s_norm (Rasio dangkal <= 70 km)", val: cell.s_norm, mean: NATIONAL_MEANS.s_norm },
+        { key: "b_inv",  label: "b_inv (Tegangan kerak 1/b)", val: cell.b_inv, mean: NATIONAL_MEANS.b_inv },
+        { key: "m_norm", label: "m_norm (Magnitudo maks)", val: cell.m_norm, mean: NATIONAL_MEANS.m_norm }
+      ];
+
+      const xStart = 175;
+      const maxBarW = 210;
+      let svgHtml = `
+        <line x1="${xStart}" y1="18" x2="${xStart + maxBarW}" y2="18" class="svg-gridline" />
+        <line x1="${xStart}" y1="60" x2="${xStart + maxBarW}" y2="60" class="svg-gridline" />
+        <line x1="${xStart}" y1="102" x2="${xStart + maxBarW}" y2="102" class="svg-gridline" />
+        <line x1="${xStart}" y1="144" x2="${xStart + maxBarW}" y2="144" class="svg-gridline" />
+        <line x1="${xStart}" y1="176" x2="${xStart + maxBarW}" y2="176" class="svg-baseline" />
+      `;
+
+      channels.forEach((ch, idx) => {
+        const y = 26 + idx * 42;
+        const barW = Math.round(ch.val * maxBarW);
+        const meanX = Math.round(xStart + ch.mean * maxBarW);
+        const diff = ch.val - ch.mean;
+        const diffStr = (diff >= 0 ? "+" : "") + fmtDec(diff, 2);
+
+        svgHtml += `
+          <text x="${xStart - 10}" y="${y + 13}" text-anchor="end" class="svg-label">${ch.label}</text>
+          <rect x="${xStart}" y="${y}" width="${barW}" height="18" fill="var(--data-accent)" />
+          <line x1="${meanX}" y1="${y - 4}" x2="${meanX}" y2="${y + 22}" stroke="var(--ink-primary)" stroke-width="2" />
+          <text x="${xStart + barW + 8}" y="${y + 13}" class="svg-val">${fmtDec(ch.val, 4)} (${diffStr} vs rata-rata)</text>
+        `;
+      });
+
+      svgHtml += `
+        <text x="${xStart}" y="196" class="svg-muted">0,00</text>
+        <text x="${xStart + Math.round(maxBarW * 0.5)}" y="196" text-anchor="middle" class="svg-muted">0,50 (Garis tegak = rata-rata)</text>
+        <text x="${xStart + maxBarW}" y="196" text-anchor="end" class="svg-muted">1,00</text>
+      `;
+      channelSvg.innerHTML = svgHtml;
+
+      selectedCellDetails.innerHTML = `
+        <div><dt>Skor SHI (Setara / Entropi)</dt><dd>${fmtDec(cell.shi, 4)} / ${fmtDec(cell.shi_entropy, 4)}</dd></div>
+        <div><dt>Koordinat Sentroid</dt><dd>${fmtCoord(cell.centroid_lat, cell.centroid_lon)}</dd></div>
+        <div><dt>Total Gempa (N &ge; Mc)</dt><dd>${fmtInt(cell.total_events)} (${fmtInt(cell.n_mc)} &ge; Mc)</dd></div>
+        <div><dt>Nilai b (&sigma;_b)</dt><dd>${fmtDec(cell.b_value_imputed, 4)} (&plusmn;${fmtDec(cell.b_std_error, 4)})</dd></div>
+        <div><dt>Gempa Dangkal (&le; 70 km)</dt><dd>${fmtInt(cell.shallow_events)} (${fmtDec(cell.shallow_ratio * 100, 1)}%)</dd></div>
+        <div><dt>Kedalaman Default (10/35 km)</dt><dd>${fmtInt(cell.default_depth_events)} (${fmtDec(cell.default_depth_share * 100, 1)}%)</dd></div>
+        <div><dt>Magnitudo Maks / Rata-rata</dt><dd>${fmtDec(cell.max_magnitude, 1)} / ${fmtDec(cell.mean_magnitude, 2)}</dd></div>
+        <div><dt>Status Estimasi b</dt><dd>${cell.b_estimated ? "Terukur (1-ring >= 30)" : "Imputasi"}</dd></div>
+      `;
+    }
+
+    // Project (lon, lat) to SVG (720 x 270)
+    function projX(lon) {
+      return Number(((lon - 94.0) / 48.0 * 720.0).toFixed(1));
+    }
+    function projY(lat) {
+      return Number(((6.5 - lat) / 18.0 * 270.0).toFixed(1));
+    }
+
+    // Render Overview Map SVG
+    function renderOverviewMap() {
+      let html = `
+        <rect x="0" y="0" width="720" height="270" fill="var(--bg-canvas)" />
+        <!-- Garis Lintang Khatulistiwa 0 deg -->
+        <line x1="0" y1="${projY(0)}" x2="720" y2="${projY(0)}" class="svg-gridline" stroke-dasharray="3,3" />
+        <text x="8" y="${projY(0) - 4}" class="svg-muted">0° Khatulistiwa</text>
+        <path d="${IDN_SVG_PATH}" fill="var(--map-land)" stroke="var(--map-stroke)" stroke-width="1" />
+      `;
+
+      // Plot 6 Reference Events
+      const refLabelLayout = {
+        "Sumatra-Andaman 2004-12-26": { text: "Aceh '04", dx: 8, dy: -4, anchor: "start" },
+        "Nias 2005-03-28":            { text: "Nias '05", dx: 8, dy: 11, anchor: "start" },
+        "Padang 2009-09-30":          { text: "Padang '09", dx: -7, dy: 12, anchor: "end" },
+        "Yogyakarta 2006-05-26":      { text: "Yogya '06", dx: 0, dy: 15, anchor: "middle" },
+        "Lombok 2018-08-05":          { text: "Lombok '18", dx: 0, dy: 15, anchor: "middle" },
+        "Palu 2018-09-28":            { text: "Palu '18", dx: -8, dy: 4, anchor: "end" }
+      };
+
+      REFERENCE_EVENTS.forEach(ev => {
+        const cx = projX(ev.lon);
+        const cy = projY(ev.lat);
+        const lbl = refLabelLayout[ev.event] || { text: ev.event, dx: 0, dy: -8, anchor: "middle" };
+        html += `
+          <g>
+            <rect x="${cx - 4}" y="${cy - 4}" width="8" height="8" fill="var(--bg-surface)" stroke="var(--ink-primary)" stroke-width="1.8" />
+            <text x="${cx + lbl.dx}" y="${cy + lbl.dy}" text-anchor="${lbl.anchor}" class="svg-muted">${lbl.text}</text>
+          </g>
+        `;
+      });
+
+      // Plot Top-20 Centroids
+      TOP_20.forEach(c => {
+        const cx = projX(c.centroid_lon);
+        const cy = projY(c.centroid_lat);
+        const isSel = c.h3_index === selectedH3;
+        const r = isSel ? 7 : 4.2;
+        const stroke = isSel ? "var(--ink-primary)" : "var(--bg-surface)";
+        const sw = isSel ? 2.2 : 1;
+        html += `
+          <circle
+            cx="${cx}"
+            cy="${cy}"
+            r="${r}"
+            fill="var(--data-accent)"
+            stroke="${stroke}"
+            stroke-width="${sw}"
+            class="map-point"
+            tabindex="0"
+            role="button"
+            aria-label="Pilih sel peringkat ${c.rank} di ${c.province} dengan SHI ${fmtDec(c.shi, 4)}"
+            data-h3="${c.h3_index}"
+          />
+        `;
+      });
+
+      // Callout annotations for Maluku Utara & Papua clusters
+      const selCell = TOP_20.find(c => c.h3_index === selectedH3) || TOP_20[0];
+      const selX = projX(selCell.centroid_lon);
+      const selY = projY(selCell.centroid_lat);
+      html += `
+        <text x="488" y="42" text-anchor="middle" class="svg-val">Klaster Laut Maluku (19 sel)</text>
+        <text x="665" y="162" text-anchor="end" class="svg-val">#20 Papua</text>
+        <circle cx="${selX}" cy="${selY}" r="11" fill="none" stroke="var(--data-accent)" stroke-width="1.5" pointer-events="none" />
+      `;
+
+      overviewMapSvg.innerHTML = html;
+
+      overviewMapSvg.querySelectorAll(".map-point").forEach(pt => {
+        pt.addEventListener("click", () => selectCell(pt.dataset.h3));
+        pt.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectCell(pt.dataset.h3);
+          }
+        });
+      });
+    }
+
+    // Render Top-20 Table with Filtering, Sorting, and UI States (Empty / Loading / Error)
+    function renderTop20Table() {
+      if (uiMode === "loading") {
+        top20TableWrap.hidden = true;
+        top20StateContainer.hidden = false;
+        top20StateContainer.innerHTML = `
+          <p><strong>Memuat ulang tabel 20 sel bahaya tertinggi...</strong></p>
+          <p>Sedang menyinkronkan kanal <code>n_norm</code>, <code>s_norm</code>, <code>b_inv</code>, dan <code>m_norm</code> dari memori lokal.</p>
+          <button type="button" class="btn-control" id="restore-from-loading">Tampilkan Data Sekarang</button>
+        `;
+        document.getElementById("restore-from-loading").addEventListener("click", () => setUiMode("normal"));
+        return;
+      }
+
+      if (uiMode === "error") {
+        top20TableWrap.hidden = true;
+        top20StateContainer.hidden = false;
+        top20StateContainer.innerHTML = `
+          <p><strong>Gagal memuat irisan tabel yang diminta.</strong></p>
+          <p>Simulasi kondisi galat aktif. Data mandiri tetap aman di dalam berkas HTML ini.</p>
+          <button type="button" class="btn-control" id="retry-from-error">Muat Ulang Data Normal</button>
+        `;
+        document.getElementById("retry-from-error").addEventListener("click", () => setUiMode("normal"));
+        return;
+      }
+
+      const q = searchQuery.trim().toLowerCase();
+      const filtered = TOP_20.filter(c => {
+        const matchProv = activeProvince === "ALL" || c.province === activeProvince;
+        const matchQuery = !q ||
+          c.h3_index.toLowerCase().includes(q) ||
+          c.province.toLowerCase().includes(q) ||
+          c.risk_driver.toLowerCase().includes(q) ||
+          fmtLocType(c.location_type).toLowerCase().includes(q) ||
+          String(c.rank) === q;
+        return matchProv && matchQuery;
+      });
+
+      filtered.sort((a, b) => {
+        const va = a[sortKey];
+        const vb = b[sortKey];
+        if (typeof va === "string") {
+          return sortAsc ? va.localeCompare(vb, "id") : vb.localeCompare(va, "id");
+        }
+        return sortAsc ? va - vb : vb - va;
+      });
+
+      if (filtered.length === 0) {
+        top20TableWrap.hidden = true;
+        top20StateContainer.hidden = false;
+        top20StateContainer.innerHTML = `
+          <p><strong>Tidak ada sel H3 yang cocok dengan saringan "${searchQuery || activeProvince}".</strong></p>
+          <p>Coba hapus kata kunci pencarian atau tampilkan kembali seluruh 20 sel teratas.</p>
+          <button type="button" class="btn-control" id="reset-filters-btn">Atur Ulang Saringan</button>
+        `;
+        document.getElementById("reset-filters-btn").addEventListener("click", () => {
+          activeProvince = "ALL";
+          searchQuery = "";
+          tableSearchInput.value = "";
+          document.querySelectorAll(".prov-filter-btn").forEach(b => {
+            b.setAttribute("aria-pressed", b.dataset.prov === "ALL" ? "true" : "false");
+          });
+          renderTop20Table();
+        });
+        return;
+      }
+
+      top20StateContainer.hidden = true;
+      top20TableWrap.hidden = false;
+
+      top20Tbody.innerHTML = filtered.map(c => {
+        const isSel = c.h3_index === selectedH3;
+        return `
+          <tr class="${isSel ? "is-selected" : ""}" data-h3="${c.h3_index}" tabindex="0" role="button" aria-label="Pilih baris peringkat ${c.rank} sel ${c.h3_index}">
+            <td class="num"><strong>#${c.rank}</strong></td>
+            <td><code class="mono">${c.h3_index}</code></td>
+            <td><strong>${c.province}</strong><br><span class="missing-cell">${fmtLocType(c.location_type)}</span></td>
+            <td class="num">${fmtCoord(c.centroid_lat, c.centroid_lon)}</td>
+            <td class="num">${fmtInt(c.total_events)}</td>
+            <td class="num">${fmtInt(c.n_mc)}</td>
+            <td class="num">${fmtDec(c.shallow_ratio * 100, 1)}%</td>
+            <td class="num">${fmtDec(c.default_depth_share * 100, 1)}%</td>
+            <td class="num">${fmtDec(c.max_magnitude, 1)}</td>
+            <td class="num">${fmtDec(c.b_value_imputed, 4)} <span class="missing-cell">(&plusmn;${fmtDec(c.b_std_error, 3)})</span> <span class="status-tag">${c.b_estimated ? "Terukur" : "Imputasi"}</span></td>
+            <td class="num"><strong>${fmtDec(c.shi, 4)}</strong></td>
+            <td class="num">${fmtDec(c.shi_entropy, 4)}</td>
+            <td>${c.risk_driver}</td>
+          </tr>
+        `;
+      }).join("");
+
+      top20Tbody.querySelectorAll("tr").forEach(row => {
+        row.addEventListener("click", () => selectCell(row.dataset.h3));
+        row.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectCell(row.dataset.h3);
+          }
+        });
+      });
+    }
+
+    // Render Reference Events Table
+    function renderRefEventsTable() {
+      refEventsTbody.innerHTML = REFERENCE_EVENTS.map(ev => {
+        const diffStr = (ev.diff > 0 ? "+" : "") + fmtDec(ev.diff, 1);
+        if (!ev.sel_ada) {
+          return `
+            <tr>
+              <td><strong>${ev.event}</strong></td>
+              <td class="num">${fmtCoord(ev.lat, ev.lon)}</td>
+              <td class="num"><strong>${fmtDec(ev.mw_lit, 1)}</strong></td>
+              <td class="num">${fmtDec(ev.mag_kat, 1)} (<code>${ev.mag_type}</code>)</td>
+              <td class="num"><strong>${diffStr}</strong></td>
+              <td><code class="mono">${ev.h3_index}</code> <span class="status-tag">Tersaring (&lt; 10 gempa)</span></td>
+              <td class="num missing-cell">-</td>
+              <td class="num missing-cell">-</td>
+              <td class="num missing-cell">-</td>
+              <td class="num missing-cell">-</td>
+              <td class="num missing-cell">-</td>
+              <td class="num">${fmtDec(ev.shi_1ring, 4)}</td>
+              <td class="missing-cell">-</td>
+            </tr>
+          `;
+        }
+        return `
+          <tr>
+            <td><strong>${ev.event}</strong></td>
+            <td class="num">${fmtCoord(ev.lat, ev.lon)}</td>
+            <td class="num"><strong>${fmtDec(ev.mw_lit, 1)}</strong></td>
+            <td class="num">${fmtDec(ev.mag_kat, 1)} (<code>${ev.mag_type}</code>)</td>
+            <td class="num"><strong>${diffStr}</strong></td>
+            <td><code class="mono">${ev.h3_index}</code> <span class="status-tag">Aktif (${ev.b_terukur ? "b terukur" : "b imputasi"})</span></td>
+            <td class="num">${fmtInt(ev.total_events)}</td>
+            <td class="num">${fmtDec(ev.max_mag_sel, 1)}</td>
+            <td class="num">${fmtDec(ev.b_val, 4)}</td>
+            <td class="num"><strong>${fmtDec(ev.shi, 4)}</strong></td>
+            <td class="num">${fmtDec(ev.pct, 2)}% (<strong>${ev.tier}</strong>)</td>
+            <td class="num">${fmtDec(ev.shi_1ring, 4)}</td>
+            <td>${ev.driver}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function selectCell(h3) {
+      selectedH3 = h3;
+      renderSelectedCell();
+      renderOverviewMap();
+      renderTop20Table();
+    }
+
+    function setUiMode(mode) {
+      uiMode = mode;
+      document.querySelectorAll(".state-mode-btn").forEach(b => {
+        b.setAttribute("aria-pressed", b.dataset.state === mode ? "true" : "false");
+      });
+      renderTop20Table();
+    }
+
+    // Event Listeners
+    cellSelector.addEventListener("change", e => selectCell(e.target.value));
+
+    document.querySelectorAll(".quick-cell-btn").forEach(btn => {
+      btn.addEventListener("click", () => selectCell(btn.dataset.h3));
+    });
+
+    document.querySelectorAll(".prov-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeProvince = btn.dataset.prov;
+        document.querySelectorAll(".prov-filter-btn").forEach(b => {
+          b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        });
+        if (uiMode !== "normal") setUiMode("normal");
+        else renderTop20Table();
+      });
+    });
+
+    tableSearchInput.addEventListener("input", e => {
+      searchQuery = e.target.value;
+      if (uiMode !== "normal") setUiMode("normal");
+      else renderTop20Table();
+    });
+
+    document.querySelectorAll(".state-mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => setUiMode(btn.dataset.state));
+    });
+
+    document.querySelectorAll(".sort-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.sort;
+        if (sortKey === key) {
+          sortAsc = !sortAsc;
+        } else {
+          sortKey = key;
+          sortAsc = key === "rank" || key === "province";
+        }
+        document.querySelectorAll("thead th").forEach(th => th.removeAttribute("aria-sort"));
+        document.querySelectorAll(".sort-indicator").forEach(ind => { ind.textContent = ""; });
+        const parentTh = btn.closest("th");
+        parentTh.setAttribute("aria-sort", sortAsc ? "ascending" : "descending");
+        btn.querySelector(".sort-indicator").innerHTML = sortAsc ? "&uarr;" : "&darr;";
+        renderTop20Table();
+      });
+    });
+
+    themeToggleBtn.addEventListener("click", () => {
+      const htmlEl = document.documentElement;
+      const nextTheme = htmlEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      htmlEl.setAttribute("data-theme", nextTheme);
+      themeToggleBtn.textContent = nextTheme === "dark" ? "Mode Terang" : "Mode Gelap";
+    });
+
+    // Initialize
+    initDropdown();
+    renderSelectedCell();
+    renderOverviewMap();
+    renderTop20Table();
+    renderRefEventsTable();
+  </script>
+</body>
+</html>
