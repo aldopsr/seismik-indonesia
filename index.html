@@ -522,6 +522,42 @@
     .site-footer .btn-link { max-width: 100%; }
     .map-point:focus-visible { stroke: var(--focus-ring); stroke-width: 3px; }
 
+    .page-intro { margin-block: 30px 22px; }
+    h1 { max-width: 32ch; font-size: clamp(26px, 3.2vw, 42px); text-wrap: balance; }
+    .run-meta, .panel-subtitle { line-height: 1.55; }
+    .dashboard-grid, .dashboard-column, .split-2 { gap: 18px; }
+    .panel { padding: 20px; }
+    .panel-title { font-size: 17px; }
+    .kpi-strip { gap: 10px; }
+    .kpi-item { padding: 12px; }
+    .kpi-value { margin-block: 4px; }
+    .map-meta { padding-block: 10px; margin-top: 2px; }
+    .map-legend { gap: 7px 15px; }
+    .map-note { padding-top: 8px; }
+    #map-selection { padding: 8px 10px; background: var(--bg-subtle); border-radius: 8px; }
+    #map-selection:empty { display: none; }
+    .ranking-list button { padding: 7px 9px; }
+    .block-section { padding-block: 34px; }
+    .block-header { margin-bottom: 18px; max-width: 76ch; }
+    .block-question { font-size: clamp(21px, 2.4vw, 28px); margin-bottom: 8px; }
+    .block-answer { line-height: 1.65; }
+    .chart-wrap { overflow-x: auto; padding-bottom: 4px; }
+    .chart-wrap .chart-svg { min-width: 480px; }
+    .profile-panel .cell-detail-dl dd { overflow-wrap: anywhere; }
+    .table-wrap table { border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .table-wrap th, .table-wrap td { padding: 10px 12px; }
+    .table-wrap tbody tr:nth-child(even) { background: var(--bg-subtle); }
+    .table-wrap tbody tr:last-child td { border-bottom: 0; }
+    .table-wrap tbody tr[data-h3]:hover, .table-wrap tbody tr.is-selected { background: var(--brand-soft); }
+    #top20-table-wrap :is(th, td):first-child { position: sticky; left: 0; background: var(--bg-surface); border-right: 1px solid var(--border-line); }
+    #top20-table-wrap th:first-child { background: var(--bg-subtle); }
+    #top20-table-wrap tr.is-selected td:first-child { background: var(--brand-soft); color: var(--brand); }
+    .table-demo { width: 100%; border-top: 1px solid var(--border-line); }
+    .table-demo summary { width: fit-content; min-height: 44px; padding-block: 12px; cursor: pointer; color: var(--ink-muted); }
+    .table-demo .control-group { padding-bottom: 4px; }
+    .limitation-item p { font-size: 14px; line-height: 1.6; }
+    .site-footer > div:first-child { flex: 1 1 42ch; max-width: 78ch; }
+
     @media (max-width: 1180px) {
       .header-inner { flex-wrap: wrap; }
       .section-nav { order: 1; width: 100%; justify-content: flex-start; border-top: 1px solid var(--border-line); padding-top: 4px; }
@@ -534,14 +570,20 @@
       .container, .site-header { width: calc(100% - 24px); }
       .site-header { margin-block: 12px 17px; }
       .header-inner { padding-inline: 10px; gap: 6px; }
-      .section-nav { overflow-x: auto; flex-wrap: nowrap; }
+      .section-nav { flex-wrap: wrap; gap: 2px; }
+      .section-nav a { padding-inline: 8px; }
+      .page-intro { margin-block: 20px 16px; }
+      .block-section { padding-block: 25px; }
+      .map-heading .btn-link { margin-bottom: 2px; }
       .section-nav a { flex: 0 0 auto; }
       .header-actions .btn-primary-link svg { display: none; }
       .header-actions :is(.btn-control, .btn-link) { padding-inline: 8px; }
       .dashboard-side, .split-2, .limitations-list { grid-template-columns: 1fr; }
       .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .cell-detail-dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .panel { padding: 12px; }
+      .panel { padding: 14px; }
+      .kpi-item { padding: 9px; }
+      .dashboard-grid, .dashboard-column, .split-2 { gap: 12px; }
       .controls-bar, .control-group { align-items: stretch; }
       .select-input, .text-input { font-size: 16px; }
     }
@@ -7657,9 +7699,9 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
               <span><i class="legend-cell" aria-hidden="true"></i> Sel Top-20</span>
               <span><i aria-hidden="true"></i> Episenter rujukan</span>
             </div>
-            <p id="map-selection" aria-live="polite"></p>
           </div>
-          <p class="kpi-note">Area tanpa heksagon tidak termasuk dalam 7.017 sel yang dianalisis.</p>
+          <p id="map-selection" aria-live="polite"></p>
+          <p class="kpi-note map-note">Heksagon menandai sel yang lolos saringan minimal 10 gempa.</p>
         </section>
       </div>
 
@@ -7697,7 +7739,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
     <!-- BLOK 3: Distribusi Tier Berdampingan -->
     <section id="distribusi-tier" class="block-section" aria-labelledby="heading-tier">
       <div class="block-header">
-        <h2 id="heading-tier" class="block-question">Mengapa kita memerlukan tier kuartil selain tier absolut?</h2>
+        <h2 id="heading-tier" class="block-question">Distribusi tingkat bahaya</h2>
         <p class="block-answer">
           Ambang absolut tetap (0,25 / 0,50 / 0,75) menempatkan <strong>76,26%</strong> sel di kategori <em>High</em> dan <strong>0 sel</strong> di <em>Low</em> karena sel bersampel &ge; 10 gempa yang dangkal dan bertegangan normal sudah mengantongi nilai dasar SHI sekitar 0,39. Pembagian kuartil memulihkan daya pisah relatif menjadi empat kelompok setara (masing-masing 25%).
         </p>
@@ -7705,71 +7747,75 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
 
       <div class="split-2">
         <div class="panel">
-          <h3 class="panel-title">Distribusi Tier Absolut (Ambang Tetap 0,25 / 0,50 / 0,75)</h3>
+          <h3 class="panel-title">Kelas absolut</h3>
           <p class="panel-subtitle">Menunjukkan konsentrasi skor pada pita 0,50 s.d. 0,75 dan 55 sel ekstrem (&ge; 0,75).</p>
-          <svg class="chart-svg" viewBox="0 0 560 190" width="560" height="190" role="img" aria-label="Grafik batang distribusi tier absolut: Low 0 sel, Moderate 1.611 sel, High 5.351 sel, Very High 55 sel">
-            <line x1="130" y1="20" x2="530" y2="20" class="svg-gridline" />
-            <line x1="130" y1="60" x2="530" y2="60" class="svg-gridline" />
-            <line x1="130" y1="100" x2="530" y2="100" class="svg-gridline" />
-            <line x1="130" y1="140" x2="530" y2="140" class="svg-gridline" />
-            <line x1="130" y1="162" x2="530" y2="162" class="svg-baseline" />
+          <div class="chart-wrap" tabindex="0" role="region" aria-label="Grafik batang distribusi tier absolut">
+            <svg class="chart-svg" viewBox="0 0 560 190" width="560" height="190" role="img" aria-label="Grafik batang distribusi tier absolut: Low 0 sel, Moderate 1.611 sel, High 5.351 sel, Very High 55 sel">
+              <line x1="130" y1="20" x2="530" y2="20" class="svg-gridline" />
+              <line x1="130" y1="60" x2="530" y2="60" class="svg-gridline" />
+              <line x1="130" y1="100" x2="530" y2="100" class="svg-gridline" />
+              <line x1="130" y1="140" x2="530" y2="140" class="svg-gridline" />
+              <line x1="130" y1="162" x2="530" y2="162" class="svg-baseline" />
 
-            <!-- Low: 0 -->
-            <text x="120" y="36" text-anchor="end" class="svg-label">Low (&lt; 0,25)</text>
-            <rect x="130" y="24" width="2" height="18" fill="var(--data-low)" />
-            <text x="138" y="37" class="svg-val">0 sel (0,00%)</text>
+              <!-- Low: 0 -->
+              <text x="120" y="36" text-anchor="end" class="svg-label">Low (&lt; 0,25)</text>
+              <rect x="130" y="24" width="2" height="18" fill="var(--data-low)" />
+              <text x="138" y="37" class="svg-val">0 sel (0,00%)</text>
 
-            <!-- Moderate: 1.611 (30.1% of 5351 -> ~111px) -->
-            <text x="120" y="74" text-anchor="end" class="svg-label">Moderate (0,25-0,50)</text>
-            <rect x="130" y="62" width="111" height="18" fill="var(--data-mod)" />
-            <text x="249" y="75" class="svg-val">1.611 sel (22,96%)</text>
+              <!-- Moderate: 1.611 (30.1% of 5351 -> ~111px) -->
+              <text x="120" y="74" text-anchor="end" class="svg-label">Moderate (0,25-0,50)</text>
+              <rect x="130" y="62" width="111" height="18" fill="var(--data-mod)" />
+              <text x="249" y="75" class="svg-val">1.611 sel (22,96%)</text>
 
-            <!-- High: 5.351 (370px) -->
-            <text x="120" y="112" text-anchor="end" class="svg-label">High (0,50-0,75)</text>
-            <rect x="130" y="100" width="305" height="18" fill="var(--data-high)" />
-            <text x="443" y="113" class="svg-val">5.351 sel (76,26%)</text>
+              <!-- High: 5.351 (370px) -->
+              <text x="120" y="112" text-anchor="end" class="svg-label">High (0,50-0,75)</text>
+              <rect x="130" y="100" width="305" height="18" fill="var(--data-high)" />
+              <text x="443" y="113" class="svg-val">5.351 sel (76,26%)</text>
 
-            <!-- Very High: 55 (4px) -->
-            <text x="120" y="150" text-anchor="end" class="svg-label">Very High (&ge; 0,75)</text>
-            <rect x="130" y="138" width="6" height="18" fill="var(--data-accent)" />
-            <text x="144" y="151" class="svg-val">55 sel (0,78%)</text>
+              <!-- Very High: 55 (4px) -->
+              <text x="120" y="150" text-anchor="end" class="svg-label">Very High (&ge; 0,75)</text>
+              <rect x="130" y="138" width="6" height="18" fill="var(--data-accent)" />
+              <text x="144" y="151" class="svg-val">55 sel (0,78%)</text>
 
-            <text x="130" y="180" class="svg-muted">0 sel</text>
-            <text x="330" y="180" text-anchor="middle" class="svg-muted">3.000 sel</text>
-            <text x="530" y="180" text-anchor="end" class="svg-muted">6.000 sel</text>
-          </svg>
+              <text x="130" y="180" class="svg-muted">0 sel</text>
+              <text x="330" y="180" text-anchor="middle" class="svg-muted">3.000 sel</text>
+              <text x="530" y="180" text-anchor="end" class="svg-muted">6.000 sel</text>
+            </svg>
+          </div>
         </div>
 
         <div class="panel">
-          <h3 class="panel-title">Distribusi Tier Kuartil Relatif (Berdasarkan Persentil Peringkat)</h3>
+          <h3 class="panel-title">Kuartil relatif</h3>
           <p class="panel-subtitle">Membagi 7.017 sel secara merata sehingga variasi bahaya regional tetap terlihat jelas.</p>
-          <svg class="chart-svg" viewBox="0 0 560 190" width="560" height="190" role="img" aria-label="Grafik batang distribusi tier kuartil: Q1 1.754 sel, Q2 1.754 sel, Q3 1.754 sel, Q4 1.755 sel">
-            <line x1="130" y1="20" x2="530" y2="20" class="svg-gridline" />
-            <line x1="130" y1="60" x2="530" y2="60" class="svg-gridline" />
-            <line x1="130" y1="100" x2="530" y2="100" class="svg-gridline" />
-            <line x1="130" y1="140" x2="530" y2="140" class="svg-gridline" />
-            <line x1="130" y1="162" x2="530" y2="162" class="svg-baseline" />
+          <div class="chart-wrap" tabindex="0" role="region" aria-label="Grafik batang distribusi tier kuartil">
+            <svg class="chart-svg" viewBox="0 0 560 190" width="560" height="190" role="img" aria-label="Grafik batang distribusi tier kuartil: Q1 1.754 sel, Q2 1.754 sel, Q3 1.754 sel, Q4 1.755 sel">
+              <line x1="130" y1="20" x2="530" y2="20" class="svg-gridline" />
+              <line x1="130" y1="60" x2="530" y2="60" class="svg-gridline" />
+              <line x1="130" y1="100" x2="530" y2="100" class="svg-gridline" />
+              <line x1="130" y1="140" x2="530" y2="140" class="svg-gridline" />
+              <line x1="130" y1="162" x2="530" y2="162" class="svg-baseline" />
 
-            <text x="120" y="36" text-anchor="end" class="svg-label">Q1 (terendah)</text>
-            <rect x="130" y="24" width="240" height="18" fill="var(--data-low)" />
-            <text x="378" y="37" class="svg-val">1.754 sel (25,00%)</text>
+              <text x="120" y="36" text-anchor="end" class="svg-label">Q1 (terendah)</text>
+              <rect x="130" y="24" width="240" height="18" fill="var(--data-low)" />
+              <text x="378" y="37" class="svg-val">1.754 sel (25,00%)</text>
 
-            <text x="120" y="74" text-anchor="end" class="svg-label">Q2 (menengah bawah)</text>
-            <rect x="130" y="62" width="240" height="18" fill="var(--data-mod)" />
-            <text x="378" y="75" class="svg-val">1.754 sel (25,00%)</text>
+              <text x="120" y="74" text-anchor="end" class="svg-label">Q2 (menengah bawah)</text>
+              <rect x="130" y="62" width="240" height="18" fill="var(--data-mod)" />
+              <text x="378" y="75" class="svg-val">1.754 sel (25,00%)</text>
 
-            <text x="120" y="112" text-anchor="end" class="svg-label">Q3 (menengah atas)</text>
-            <rect x="130" y="100" width="240" height="18" fill="var(--data-high)" />
-            <text x="378" y="113" class="svg-val">1.754 sel (25,00%)</text>
+              <text x="120" y="112" text-anchor="end" class="svg-label">Q3 (menengah atas)</text>
+              <rect x="130" y="100" width="240" height="18" fill="var(--data-high)" />
+              <text x="378" y="113" class="svg-val">1.754 sel (25,00%)</text>
 
-            <text x="120" y="150" text-anchor="end" class="svg-label">Q4 (tertinggi)</text>
-            <rect x="130" y="138" width="241" height="18" fill="var(--data-accent)" />
-            <text x="379" y="151" class="svg-val">1.755 sel (25,01%)</text>
+              <text x="120" y="150" text-anchor="end" class="svg-label">Q4 (tertinggi)</text>
+              <rect x="130" y="138" width="241" height="18" fill="var(--data-accent)" />
+              <text x="379" y="151" class="svg-val">1.755 sel (25,01%)</text>
 
-            <text x="130" y="180" class="svg-muted">0%</text>
-            <text x="250" y="180" text-anchor="middle" class="svg-muted">12,5%</text>
-            <text x="370" y="180" text-anchor="middle" class="svg-muted">25,0%</text>
-          </svg>
+              <text x="130" y="180" class="svg-muted">0%</text>
+              <text x="250" y="180" text-anchor="middle" class="svg-muted">12,5%</text>
+              <text x="370" y="180" text-anchor="middle" class="svg-muted">25,0%</text>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
@@ -7777,7 +7823,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
     <!-- BLOK 5: Tabel Top-20 -->
     <section id="top20" class="block-section" aria-labelledby="heading-top20">
       <div class="block-header">
-        <h2 id="heading-top20" class="block-question">Sel H3 mana saja yang menempati 20 peringkat bahaya tertinggi?</h2>
+        <h2 id="heading-top20" class="block-question">20 sel dengan skor SHI tertinggi</h2>
         <p class="block-answer">
           Seluruh 20 sel teratas berstatus <em>Very High</em> (&ge; 0,75) dan 100% memiliki nilai <em>b</em> terukur secara langsung (tanpa imputasi) dengan galat baku &sigma;_b &le; 0,036. Sebanyak 15 sel dipicu oleh densitas gempa tinggi, sedangkan 5 sel lainnya dipicu oleh magnitudo maksimum. Pilih baris untuk memperbarui profil kanal dan penanda peta.
         </p>
@@ -7797,17 +7843,19 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
           <input type="search" id="table-search" class="text-input" placeholder="Mis. 8568c9a atau Papua..." autocomplete="off">
         </div>
 
-        <div class="control-group" role="group" aria-label="Simulasi status antarmuka tabel">
-          <span class="control-label">Status tampilan:</span>
+        <details class="table-demo">
+          <summary>Simulasi status tabel</summary>
+          <div class="control-group" role="group" aria-label="Simulasi status antarmuka tabel">
           <button type="button" class="filter-btn state-mode-btn" data-state="normal" aria-pressed="true">Data Aktif</button>
           <button type="button" class="filter-btn state-mode-btn" data-state="loading" aria-pressed="false">Memuat</button>
           <button type="button" class="filter-btn state-mode-btn" data-state="error" aria-pressed="false">Galat</button>
-        </div>
+          </div>
+        </details>
       </div>
 
       <div id="top20-state-container" class="ui-state-box" hidden aria-live="polite"></div>
 
-      <div class="table-wrap" id="top20-table-wrap">
+      <div class="table-wrap" id="top20-table-wrap" tabindex="0" role="region" aria-label="Tabel peringkat Top-20. Gulir untuk melihat semua kolom.">
         <table aria-label="Tabel 20 sel H3 dengan skor bahaya seismik tertinggi">
           <thead>
             <tr>
@@ -7854,7 +7902,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
     <!-- BLOK 6: Ringkasan Sensitivitas (4 Pengujian) -->
     <section id="sensitivitas" class="block-section" aria-labelledby="heading-sensitivitas">
       <div class="block-header">
-        <h2 id="heading-sensitivitas" class="block-question">Seberapa kokoh peringkat Top-20 terhadap perubahan parameter metodologis?</h2>
+        <h2 id="heading-sensitivitas" class="block-question">Uji sensitivitas</h2>
         <p class="block-answer">
           Empat uji sensitivitas membuktikan bahwa klaster puncak di Laut Maluku bukan artefak parameter: mengubah ambang jumlah gempa minimum (<code>N_min</code>) maupun membuang 30,24% gempa berkedalaman asumsi menghasilkan <strong>20/20 sel Top-20 yang identik</strong>. Konversi skala magnitudo Scordilis (2006) menghasilkan <strong>18/20</strong> kesamaan pada Mc tetap 4,00 (korelasi peringkat Spearman &rho; = 0,9779).
         </p>
@@ -7865,7 +7913,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
         <div class="panel">
           <h3 class="panel-title">Uji A: Ambang Minimum Gempa per Sel (N_min = 5, 10, 20)</h3>
           <p class="panel-subtitle">Peringkat Top-20 bertahan 20/20 di semua ambang; N_min = 10 menyeimbangkan cakupan 7.017 sel dan proporsi nilai b terukur (76,1%).</p>
-          <div class="table-wrap" style="margin-bottom: 12px;">
+          <div class="table-wrap" tabindex="0" role="region" aria-label="Tabel sensitivitas ambang N_min" style="margin-bottom: 12px;">
             <table aria-label="Tabel sensitivitas ambang N_min">
               <thead>
                 <tr>
@@ -7912,7 +7960,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
         <div class="panel">
           <h3 class="panel-title">Uji B: Penghapusan Kedalaman Default (10 km &amp; 35 km = 30,24% Event)</h3>
           <p class="panel-subtitle">Membuang 94.957 gempa berkedalaman terpatok instansi (84.528 di 10 km; 10.429 di 35 km) sama sekali tidak menggeser komposisi Top-20 (20/20).</p>
-          <div class="table-wrap" style="margin-bottom: 12px;">
+          <div class="table-wrap" tabindex="0" role="region" aria-label="Tabel sensitivitas penghapusan kedalaman default" style="margin-bottom: 12px;">
             <table aria-label="Tabel sensitivitas penghapusan kedalaman default">
               <thead>
                 <tr>
@@ -7953,7 +8001,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
         <div class="panel">
           <h3 class="panel-title">Uji C: Homogenisasi Magnitudo Scordilis (2006) &amp; Pemisahan Efek Mc</h3>
           <p class="panel-subtitle">Mengonversi 20,8% gempa (mb &amp; Ms ke Mw aproksimasi) sambil memisahkan efek kenaikan ambang Mc 4,80 dari efek rumus konversi.</p>
-          <div class="table-wrap" style="margin-bottom: 12px;">
+          <div class="table-wrap" tabindex="0" role="region" aria-label="Tabel sensitivitas homogenisasi magnitudo dan bobot entropi" style="margin-bottom: 12px;">
             <table aria-label="Tabel sensitivitas homogenisasi magnitudo dan bobot entropi">
               <thead>
                 <tr>
@@ -8016,31 +8064,33 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
         <div class="panel">
           <h3 class="panel-title">Uji D: Pertukaran Resolusi Spasial H3 (Resolusi 4, 5, dan 6)</h3>
           <p class="panel-subtitle">Resolusi 6 terlalu halus untuk kepadatan katalog saat ini: 64.185 sel gugur dan proporsi nilai b terukur jatuh ke 31,3%.</p>
-          <svg class="chart-svg" viewBox="0 0 560 155" width="560" height="155" role="img" aria-label="Grafik batang persentase sel dengan nilai b terukur per resolusi H3: Resolusi 4 sebesar 96,0%, Resolusi 5 sebesar 76,1%, Resolusi 6 sebesar 31,3%">
-            <line x1="175" y1="18" x2="520" y2="18" class="svg-gridline" />
-            <line x1="175" y1="56" x2="520" y2="56" class="svg-gridline" />
-            <line x1="175" y1="94" x2="520" y2="94" class="svg-gridline" />
-            <line x1="175" y1="122" x2="520" y2="122" class="svg-baseline" />
+          <div class="chart-wrap" tabindex="0" role="region" aria-label="Grafik batang persentase sel dengan nilai b terukur per resolusi H3">
+            <svg class="chart-svg" viewBox="0 0 560 155" width="560" height="155" role="img" aria-label="Grafik batang persentase sel dengan nilai b terukur per resolusi H3: Resolusi 4 sebesar 96,0%, Resolusi 5 sebesar 76,1%, Resolusi 6 sebesar 31,3%">
+              <line x1="175" y1="18" x2="520" y2="18" class="svg-gridline" />
+              <line x1="175" y1="56" x2="520" y2="56" class="svg-gridline" />
+              <line x1="175" y1="94" x2="520" y2="94" class="svg-gridline" />
+              <line x1="175" y1="122" x2="520" y2="122" class="svg-baseline" />
 
-            <!-- Res 4: 96.0% of 320px = 307px -->
-            <text x="165" y="34" text-anchor="end" class="svg-label">Res 4 (1.770,3 km&sup2; &middot; 2.144 sel)</text>
-            <rect x="175" y="22" width="307" height="18" fill="var(--data-mod)" />
-            <text x="488" y="35" class="svg-val">96,0%</text>
+              <!-- Res 4: 96.0% of 320px = 307px -->
+              <text x="165" y="34" text-anchor="end" class="svg-label">Res 4 (1.770,3 km&sup2; &middot; 2.144 sel)</text>
+              <rect x="175" y="22" width="307" height="18" fill="var(--data-mod)" />
+              <text x="488" y="35" class="svg-val">96,0%</text>
 
-            <!-- Res 5: 76.1% of 320px = 244px -->
-            <text x="165" y="72" text-anchor="end" class="svg-label">Res 5 (252,9 km&sup2; &middot; 7.017 sel)</text>
-            <rect x="175" y="60" width="244" height="18" fill="var(--data-accent)" />
-            <text x="425" y="73" class="svg-val">76,1% (dipilih)</text>
+              <!-- Res 5: 76.1% of 320px = 244px -->
+              <text x="165" y="72" text-anchor="end" class="svg-label">Res 5 (252,9 km&sup2; &middot; 7.017 sel)</text>
+              <rect x="175" y="60" width="244" height="18" fill="var(--data-accent)" />
+              <text x="425" y="73" class="svg-val">76,1% (dipilih)</text>
 
-            <!-- Res 6: 31.3% of 320px = 100px -->
-            <text x="165" y="110" text-anchor="end" class="svg-label">Res 6 (36,1 km&sup2; &middot; 7.102 sel)</text>
-            <rect x="175" y="98" width="100" height="18" fill="var(--data-low)" />
-            <text x="281" y="111" class="svg-val">31,3% (68,7% imputasi)</text>
+              <!-- Res 6: 31.3% of 320px = 100px -->
+              <text x="165" y="110" text-anchor="end" class="svg-label">Res 6 (36,1 km&sup2; &middot; 7.102 sel)</text>
+              <rect x="175" y="98" width="100" height="18" fill="var(--data-low)" />
+              <text x="281" y="111" class="svg-val">31,3% (68,7% imputasi)</text>
 
-            <text x="175" y="142" class="svg-muted">0% b terukur</text>
-            <text x="335" y="142" text-anchor="middle" class="svg-muted">50% b terukur</text>
-            <text x="495" y="142" text-anchor="end" class="svg-muted">100%</text>
-          </svg>
+              <text x="175" y="142" class="svg-muted">0% b terukur</text>
+              <text x="335" y="142" text-anchor="middle" class="svg-muted">50% b terukur</text>
+              <text x="495" y="142" text-anchor="end" class="svg-muted">100%</text>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
@@ -8048,7 +8098,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
     <!-- BLOK 7: Validasi Event Rujukan (6 Gempa Besar Bersejarah) -->
     <section id="validasi-event" class="block-section" aria-labelledby="heading-validasi">
       <div class="block-header">
-        <h2 id="heading-validasi" class="block-question">Bagaimana kinerja H3-SHI pada 6 gempa merusak bersejarah di Indonesia?</h2>
+        <h2 id="heading-validasi" class="block-question">Validasi dengan enam gempa bersejarah</h2>
         <p class="block-answer">
           Lima dari enam episenter gempa besar jatuh di dalam sel aktif berstatus <em>High</em> (persentil ke-76 hingga ke-97 nasional). Namun validasi ini juga menyingkap temuan kritis pada katalog mentah: gempa megathrust Sumatra-Andaman 2004 (literatur Mw 9,1) hanya tercatat <strong>7,1 Mw(mB)</strong> (saturasi <strong>-2,0</strong> satuan), sementara sel episenter Nias 2005 (Mw 8,6; tercatat 7,7) memiliki kurang dari 10 gempa sehingga tersaring keluar oleh ambang <code>N_min = 10</code>.
         </p>
@@ -8057,61 +8107,63 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
       <div class="panel" style="margin-bottom: 20px;">
         <h3 class="panel-title">Perbandingan Magnitudo Literatur (Mw) vs Magnitudo Tercatat di Katalog</h3>
         <p class="panel-subtitle">Selisih negatif terjadi akibat saturasi skala gelombang badan (mb/mB) pada gempa pra-2010 sebelum adopsi luas Mw murni.</p>
-        <svg class="chart-svg" viewBox="0 0 720 185" width="720" height="185" role="img" aria-label="Grafik perbandingan magnitudo literatur dan katalog untuk 6 gempa rujukan">
-          <line x1="190" y1="18" x2="680" y2="18" class="svg-gridline" />
-          <line x1="190" y1="68" x2="680" y2="68" class="svg-gridline" />
-          <line x1="190" y1="118" x2="680" y2="118" class="svg-gridline" />
-          <line x1="190" y1="154" x2="680" y2="154" class="svg-baseline" />
+        <div class="chart-wrap" tabindex="0" role="region" aria-label="Grafik perbandingan magnitudo literatur dan katalog untuk 6 gempa rujukan">
+          <svg class="chart-svg" viewBox="0 0 720 185" width="720" height="185" role="img" aria-label="Grafik perbandingan magnitudo literatur dan katalog untuk 6 gempa rujukan">
+            <line x1="190" y1="18" x2="680" y2="18" class="svg-gridline" />
+            <line x1="190" y1="68" x2="680" y2="68" class="svg-gridline" />
+            <line x1="190" y1="118" x2="680" y2="118" class="svg-gridline" />
+            <line x1="190" y1="154" x2="680" y2="154" class="svg-baseline" />
 
-          <!-- Skala X: Mag 5.0 di x=190 s.d. Mag 9.5 di x=640 (100px per 1.0 mag) -->
-          <!-- Aceh 2004: Lit 9.1 (x=600), Kat 7.1 (x=400) -->
-          <text x="180" y="32" text-anchor="end" class="svg-label">Sumatra-Andaman 2004</text>
-          <line x1="400" y1="28" x2="600" y2="28" stroke="var(--data-accent)" stroke-width="3" />
-          <circle cx="400" cy="28" r="4.5" fill="var(--ink-primary)" />
-          <circle cx="600" cy="28" r="4.5" fill="var(--data-accent)" />
-          <text x="610" y="32" class="svg-val">Kat 7,1 vs Lit 9,1 (-2,0)</text>
+            <!-- Skala X: Mag 5.0 di x=190 s.d. Mag 9.5 di x=640 (100px per 1.0 mag) -->
+            <!-- Aceh 2004: Lit 9.1 (x=600), Kat 7.1 (x=400) -->
+            <text x="180" y="32" text-anchor="end" class="svg-label">Sumatra-Andaman 2004</text>
+            <line x1="400" y1="28" x2="600" y2="28" stroke="var(--data-accent)" stroke-width="3" />
+            <circle cx="400" cy="28" r="4.5" fill="var(--ink-primary)" />
+            <circle cx="600" cy="28" r="4.5" fill="var(--data-accent)" />
+            <text x="610" y="32" class="svg-val">Kat 7,1 vs Lit 9,1 (-2,0)</text>
 
-          <!-- Nias 2005: Lit 8.6 (x=550), Kat 7.7 (x=460) -->
-          <text x="180" y="54" text-anchor="end" class="svg-label">Nias 2005 (sel &lt; 10 gempa)</text>
-          <line x1="460" y1="50" x2="550" y2="50" stroke="var(--data-accent)" stroke-width="3" />
-          <circle cx="460" cy="50" r="4.5" fill="var(--ink-primary)" />
-          <circle cx="550" cy="50" r="4.5" fill="var(--data-accent)" />
-          <text x="560" y="54" class="svg-val">Kat 7,7 vs Lit 8,6 (-0,9)</text>
+            <!-- Nias 2005: Lit 8.6 (x=550), Kat 7.7 (x=460) -->
+            <text x="180" y="54" text-anchor="end" class="svg-label">Nias 2005 (sel &lt; 10 gempa)</text>
+            <line x1="460" y1="50" x2="550" y2="50" stroke="var(--data-accent)" stroke-width="3" />
+            <circle cx="460" cy="50" r="4.5" fill="var(--ink-primary)" />
+            <circle cx="550" cy="50" r="4.5" fill="var(--data-accent)" />
+            <text x="560" y="54" class="svg-val">Kat 7,7 vs Lit 8,6 (-0,9)</text>
 
-          <!-- Padang 2009: Lit 7.6 (x=450), Kat 7.1 (x=400) -->
-          <text x="180" y="76" text-anchor="end" class="svg-label">Padang 2009</text>
-          <line x1="400" y1="72" x2="450" y2="72" stroke="var(--data-high)" stroke-width="3" />
-          <circle cx="400" cy="72" r="4.5" fill="var(--ink-primary)" />
-          <circle cx="450" cy="72" r="4.5" fill="var(--data-accent)" />
-          <text x="460" y="76" class="svg-val">Kat 7,1 vs Lit 7,6 (-0,5)</text>
+            <!-- Padang 2009: Lit 7.6 (x=450), Kat 7.1 (x=400) -->
+            <text x="180" y="76" text-anchor="end" class="svg-label">Padang 2009</text>
+            <line x1="400" y1="72" x2="450" y2="72" stroke="var(--data-high)" stroke-width="3" />
+            <circle cx="400" cy="72" r="4.5" fill="var(--ink-primary)" />
+            <circle cx="450" cy="72" r="4.5" fill="var(--data-accent)" />
+            <text x="460" y="76" class="svg-val">Kat 7,1 vs Lit 7,6 (-0,5)</text>
 
-          <!-- Yogyakarta 2006: Lit 6.3 (x=320), Kat 6.0 (x=290) -->
-          <text x="180" y="98" text-anchor="end" class="svg-label">Yogyakarta 2006</text>
-          <line x1="290" y1="94" x2="320" y2="94" stroke="var(--data-high)" stroke-width="3" />
-          <circle cx="290" cy="94" r="4.5" fill="var(--ink-primary)" />
-          <circle cx="320" cy="94" r="4.5" fill="var(--data-accent)" />
-          <text x="330" y="98" class="svg-val">Kat 6,0 vs Lit 6,3 (-0,3)</text>
+            <!-- Yogyakarta 2006: Lit 6.3 (x=320), Kat 6.0 (x=290) -->
+            <text x="180" y="98" text-anchor="end" class="svg-label">Yogyakarta 2006</text>
+            <line x1="290" y1="94" x2="320" y2="94" stroke="var(--data-high)" stroke-width="3" />
+            <circle cx="290" cy="94" r="4.5" fill="var(--ink-primary)" />
+            <circle cx="320" cy="94" r="4.5" fill="var(--data-accent)" />
+            <text x="330" y="98" class="svg-val">Kat 6,0 vs Lit 6,3 (-0,3)</text>
 
-          <!-- Lombok 2018: Lit 6.9 (x=380), Kat 6.9 (x=380) -->
-          <text x="180" y="120" text-anchor="end" class="svg-label">Lombok 2018</text>
-          <circle cx="380" cy="116" r="5" fill="var(--ink-primary)" />
-          <text x="392" y="120" class="svg-val">Kat 6,9 = Lit 6,9 (0,0)</text>
+            <!-- Lombok 2018: Lit 6.9 (x=380), Kat 6.9 (x=380) -->
+            <text x="180" y="120" text-anchor="end" class="svg-label">Lombok 2018</text>
+            <circle cx="380" cy="116" r="5" fill="var(--ink-primary)" />
+            <text x="392" y="120" class="svg-val">Kat 6,9 = Lit 6,9 (0,0)</text>
 
-          <!-- Palu 2018: Lit 7.5 (x=440), Kat 7.5 (x=440) -->
-          <text x="180" y="142" text-anchor="end" class="svg-label">Palu 2018</text>
-          <circle cx="440" cy="138" r="5" fill="var(--ink-primary)" />
-          <text x="452" y="142" class="svg-val">Kat 7,5 = Lit 7,5 (0,0)</text>
+            <!-- Palu 2018: Lit 7.5 (x=440), Kat 7.5 (x=440) -->
+            <text x="180" y="142" text-anchor="end" class="svg-label">Palu 2018</text>
+            <circle cx="440" cy="138" r="5" fill="var(--ink-primary)" />
+            <text x="452" y="142" class="svg-val">Kat 7,5 = Lit 7,5 (0,0)</text>
 
-          <text x="190" y="172" class="svg-muted">Mag 5,0</text>
-          <text x="290" y="172" text-anchor="middle" class="svg-muted">6,0</text>
-          <text x="390" y="172" text-anchor="middle" class="svg-muted">7,0</text>
-          <text x="490" y="172" text-anchor="middle" class="svg-muted">8,0</text>
-          <text x="590" y="172" text-anchor="middle" class="svg-muted">9,0</text>
-          <text x="640" y="172" text-anchor="end" class="svg-muted">9,5</text>
-        </svg>
+            <text x="190" y="172" class="svg-muted">Mag 5,0</text>
+            <text x="290" y="172" text-anchor="middle" class="svg-muted">6,0</text>
+            <text x="390" y="172" text-anchor="middle" class="svg-muted">7,0</text>
+            <text x="490" y="172" text-anchor="middle" class="svg-muted">8,0</text>
+            <text x="590" y="172" text-anchor="middle" class="svg-muted">9,0</text>
+            <text x="640" y="172" text-anchor="end" class="svg-muted">9,5</text>
+          </svg>
+        </div>
       </div>
 
-      <div class="table-wrap">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Tabel validasi gempa. Gulir untuk melihat semua kolom.">
         <table aria-label="Tabel validasi 6 gempa besar bersejarah terhadap sel H3">
           <thead>
             <tr>
@@ -8138,7 +8190,7 @@ M467.1,98.6 467.4,100 468.7,100.5 469.7,99.6 469.5,98.2 468.2,97.7z" />
     <!-- BLOK 8: Keterbatasan Metodologis & Data -->
     <section id="keterbatasan" class="block-section" aria-labelledby="heading-keterbatasan">
       <div class="block-header">
-        <h2 id="heading-keterbatasan" class="block-question">Apa keterbatasan utama yang wajib diperhatikan saat menginterpretasikan H3-SHI?</h2>
+        <h2 id="heading-keterbatasan" class="block-question">Keterbatasan analisis</h2>
         <p class="block-answer">
           H3-SHI dirancang sebagai indeks bahaya seismik historis berbasis katalog titik episenter (bukan model probabilistik pergerakan tanah PSHA). Empat keterbatasan struktural di bawah ini dicatat secara transparan dari hasil audit data.
         </p>
