@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <title>Peta Bahaya Seismik Indonesia | H3-SHI</title>
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -14,35 +15,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
     
-            <meta name="viewport" content="width=device-width,
-                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <style>
-                #map_3471d6b7d6d1b57075945399a9843d98 {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-                .leaflet-container { font-size: 1rem; }
-            </style>
-
-            <style>html, body {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            </style>
-
-            <style>#map {
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                }
-            </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html, body { margin: 0; min-height: 100%; }
+        body { background: #edf0f7; color: #20243a; font: 14px/1.5 system-ui, sans-serif; }
+        .map-shell { width: min(calc(100% - 32px), 1440px); margin: 16px auto; }
+        .map-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px 18px; flex-wrap: wrap; padding: 12px 16px; margin-bottom: 12px; }
+        .map-toolbar, .map-frame { background: white; border: 1px solid #e2e6f0; border-radius: 14px; }
+        .map-brand { display: flex; align-items: center; gap: 10px; }
+        .map-brand-mark { display: grid; place-items: center; flex: 0 0 42px; width: 42px; height: 42px; border-radius: 11px; background: #5441bb; color: white; }
+        .map-toolbar h1 { font: 750 clamp(17px, 3vw, 23px)/1.2 system-ui, sans-serif; margin: 0 0 2px; letter-spacing: -.025em; }
+        .map-toolbar p { margin: 0; color: #566078; }
+        .map-back { display: inline-flex; align-items: center; min-height: 44px; padding: 7px 12px; color: #5441bb; background: #eeebfc; border-radius: 9px; font-weight: 700; text-decoration: none; }
+        .map-back:hover { background: #e1daf9; color: #4634a4; }
+        :focus-visible { outline: 2px solid #5441bb; outline-offset: 3px; }
+        .map-frame { position: relative; overflow: hidden; }
+        #map_3471d6b7d6d1b57075945399a9843d98 { position: relative; width: 100%; height: max(470px, calc(100dvh - 128px)); background: #e4eaf2; }
+        .leaflet-container { font: 13px/1.45 system-ui, sans-serif; }
+        .leaflet-container .leaflet-bar, .leaflet-container .leaflet-control-layers, .legend.leaflet-control { border: 1px solid #e2e6f0; border-radius: 10px; box-shadow: 0 3px 12px #20243a1a; }
+        .leaflet-container .leaflet-bar a:first-child { border-radius: 9px 9px 0 0; }
+        .leaflet-container .leaflet-bar a:last-child { border-radius: 0 0 9px 9px; }
+        .legend.leaflet-control { background: white; width: min(450px, calc(100vw - 70px)); padding: 5px; }
+        .legend svg { display: block; width: 100%; height: auto; }
+        .leaflet-popup-content-wrapper { border-radius: 10px; }
+        .map-message { position: absolute; z-index: 401; pointer-events: none; top: 45%; inset-inline: 20px; margin: 0; text-align: center; color: #35425c; }
+        @media (max-width: 600px) {
+            .map-shell { width: calc(100% - 20px); margin-block: 10px; }
+            .map-toolbar { padding: 10px; }
+            #map_3471d6b7d6d1b57075945399a9843d98 { height: max(420px, calc(100dvh - 166px)); }
+        }
+    </style>
 
             <script>
                 L_NO_TOUCH = false;
@@ -71,10 +73,27 @@
 <body>
     
     
-            <div class="folium-map" id="map_3471d6b7d6d1b57075945399a9843d98" ></div>
+    <main class="map-shell">
+        <header class="map-toolbar">
+            <div class="map-brand">
+                <span class="map-brand-mark"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12h4l3-7 5 14 3-7h5"/></svg></span>
+                <div>
+                    <h1>Peta Bahaya Seismik Indonesia</h1>
+                    <p>7.017 sel H3 &middot; Katalog gempa 1960–2024</p>
+                </div>
+            </div>
+            <a class="map-back" href="index.html">&larr; Kembali ke dashboard</a>
+        </header>
+        <div class="map-frame">
+            <p class="map-message" id="map-message" role="status">Memuat peta interaktif. Peta dasar memerlukan koneksi internet.</p>
+            <div class="folium-map" id="map_3471d6b7d6d1b57075945399a9843d98" aria-label="Peta interaktif indeks bahaya seismik"></div>
+        </div>
+    </main>
         
-</body>
 <script>
+    if (!window.L || !window.d3) {
+        document.getElementById("map-message").textContent = "Peta gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.";
+    } else {
     
     
             var map_3471d6b7d6d1b57075945399a9843d98 = L.map(
@@ -112,7 +131,7 @@
             );
         
     
-            tile_layer_2ad27599caca446ff0514139fa10acde.addTo(map_3471d6b7d6d1b57075945399a9843d98);
+
         
     
             var tile_layer_671c11ea13c02ec61a5cbce868dc168e = L.tileLayer(
@@ -132,6 +151,8 @@
             );
         
     
+            tile_layer_671c11ea13c02ec61a5cbce868dc168e.addTo(map_3471d6b7d6d1b57075945399a9843d98);
+
             var choropleth_4a4727e01d92646c31a3e4bd14b2bccb = L.featureGroup(
                 {
 }
@@ -185,7 +206,7 @@
               .domain([0.0, 1.0])
               .range([0, 450 - 50]);
 
-    color_map_e169a635ccb34e5298898757801ff799.legend = L.control({position: 'topright'});
+    color_map_e169a635ccb34e5298898757801ff799.legend = L.control({position: 'bottomleft'});
     color_map_e169a635ccb34e5298898757801ff799.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
     color_map_e169a635ccb34e5298898757801ff799.legend.addTo(map_3471d6b7d6d1b57075945399a9843d98);
 
@@ -197,6 +218,9 @@
 
     color_map_e169a635ccb34e5298898757801ff799.svg = d3.select(".legend.leaflet-control").append("svg")
         .attr("id", 'legend')
+        .attr("viewBox", "0 0 450 40")
+        .attr("role", "img")
+        .attr("aria-label", "Legenda skor SHI dari 0 sampai 1")
         .attr("width", 450)
         .attr("height", 40);
 
@@ -773,11 +797,11 @@
     
             var layer_control_7b8e27dae590ac563eced69951d54d02_layers = {
                 base_layers : {
-                    "Esri Dark Gray" : tile_layer_2ad27599caca446ff0514139fa10acde,
-                    "Esri Light Gray" : tile_layer_671c11ea13c02ec61a5cbce868dc168e,
+                    "Peta dasar gelap (Esri)" : tile_layer_2ad27599caca446ff0514139fa10acde,
+                    "Peta dasar terang (Esri)" : tile_layer_671c11ea13c02ec61a5cbce868dc168e,
                 },
                 overlays :  {
-                    "Seismic Hazard Index" : choropleth_4a4727e01d92646c31a3e4bd14b2bccb,
+                    "Indeks Bahaya Seismik" : choropleth_4a4727e01d92646c31a3e4bd14b2bccb,
                 },
             };
             let layer_control_7b8e27dae590ac563eced69951d54d02 = L.control.layers(
@@ -791,5 +815,8 @@
             ).addTo(map_3471d6b7d6d1b57075945399a9843d98);
 
         
+    document.getElementById("map-message").hidden = true;
+    }
 </script>
+</body>
 </html>
