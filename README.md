@@ -78,12 +78,18 @@ Pada model dasar (*baseline*), masing-masing kanal diberi bobot seimbang $w_k = 
 4. **Analisis Sel Episentrum Aceh 2004:**
    Sel H3 yang memuat titik episentrum Aceh 2004 hanya memuat 13 peristiwa gempa tercatat. Investigasi membuktikan ini bukan karena batasan koordinat yang terpotong, melainkan karena panjang retakan (*rupture length*) gempa mencapai 1.300 km, sehingga ribuan gempa susulan tersebar meluas ke puluhan sel H3 berukuran 17 km.
 
+5. **Analisis Lanjutan Risiko Bencana (Bagian 15–18 Notebook):**
+   * **Penambalan Gempa Raksasa (*GCMT Patch*) & Pemisahan Darat vs. Laut:** Menambal 7 gempa megathrust utama yang tersaturasi (Aceh 2004 `7,0 -> 9,1`, Nias 2005 `7,0 -> 8,6`, Bengkulu 2007 `6,8 -> 8,4`, dll.) dan memetakan seluruh 7.017 sel terhadap daratan GADM (`2.760` *onshore* / 39,3%, `2.798` *offshore_near* / 39,9%, `1.459` *offshore_far* / 20,8%), menghasilkan **74 sel kandidat tsunami** dengan puncak di Aceh (`0,9214`), Bengkulu (`0,8720`), dan Sumatera Barat (`0,8007`).
+   * **Declustering Gardner-Knopoff & *Seismic Gap*:** Dari 314.017 gempa valid waktu, **41,7% (131.018)** teridentifikasi sebagai gempa induk dan **58,3% (182.999)** sebagai gempa susulan (`Overlap Top-20 = 10/20`, $\rho = 0{,}8705$). Teridentifikasi pula **1.205 sel kandidat *Seismic Gap*** (tegangan tinggi $b < 0{,}75$ tanpa pelepasan $M \ge 6{,}0$ sejak 2005).
+   * **Tren Temporal 1960–2024:** Pada ambang adil $M \ge 4{,}5$ untuk mengendalikan bias penambahan sensor modern, laju gempa tahunan pasca-2005 melonjak paling tajam di Sumatera Barat (8,86x), Sumatera Utara (6,70x), Aceh (4,71x), Jawa Tengah (4,66x), dan Jawa Barat (3,79x).
+   * **Indeks Risiko Manusia (SREI):** Menggabungkan SHI dengan kepadatan penduduk BPS (34 provinsi) dan bobot jarak lokasi ($\text{SREI} = 0{,}60 \cdot \text{SHI} + 0{,}40 \cdot E_{\text{loc}}$). Peringkat risiko manusia bergeser dari Maluku Utara ke wilayah daratan padat: Banten (`0,6946`), Jawa Barat (`0,6817`), Bali (`0,6587`), dan DI Yogyakarta (`0,6585`).
+
 ---
 
 ## Struktur Repositori
 
 ```text
-├── H3_SHI_Seismic_Hazard.ipynb         # Notebook utama pipeline data (71 cell, 14 bagian)
+├── H3_SHI_Seismic_Hazard.ipynb         # Notebook utama pipeline data (82 cell, 18 bagian)
 ├── index.html                          # Dashboard analitik interaktif (single-file HTML/CSS/JS)
 ├── indonesia_seismic_hazard_map.html   # Peta choropleth Folium interaktif (7.017 sel H3)
 ├── pencerdasan_dashboard.md            # Panduan membaca dashboard untuk orang awam
@@ -134,7 +140,7 @@ Repositori ini menyediakan dua visualisasi siap pakai tanpa perlu instalasi serv
 
 1. **Dashboard Analitik ([index.html](index.html)):**
    * Dashboard berbasis web mandiri (*zero external dependencies*, tanpa Node.js/build step).
-   * Fitur: Indikator KPI nasional, visualisasi perbandingan Absolute Tier vs Quartile Tier, kalkulator dekomposisi 4 kanal, peta ikhtisar 20 sel teratas, tabel interaktif dengan pencarian dan filter provinsi, serta simulasi pengujian sensitivitas A sampai D.
+   * Fitur: Indikator KPI nasional, pencarian 34 provinsi dengan *zoom* peta SVG interaktif, perbandingan **Bahaya Alam (SHI) vs. Risiko Manusia (SREI)**, daftar zona rawan guncangan darat (*onshore*) dan potensi tsunami (*offshore* dangkal $M \ge 6{,}5$), kalkulator dekomposisi 4 kanal, tabel interaktif Top-20, serta simulasi pengujian sensitivitas A sampai D.
    * Cukup klik ganda berkas `index.html` untuk membuka di peramban apa pun.
 2. **Peta Choropleth Lengkap ([indonesia_seismic_hazard_map.html](indonesia_seismic_hazard_map.html)):**
    * Visualisasi interaktif berbasis Leaflet dan Folium yang merender seluruh 7.017 heksagon di atas peta dasar Esri Canvas Dark/Light.
