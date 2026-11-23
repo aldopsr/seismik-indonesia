@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Memahami Proyek H3-SHI - Dashboard Belajar Tim</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg-canvas: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --ink-primary: #0f172a;
+      --ink-muted: #475569;
+      --border-line: #e2e8f0;
+      --border-strong: #1e40af;
+      --brand: #1e40af;
+      --brand-soft: #dbeafe;
+      --accent: #d97706;
+      --accent-soft: #fef3c7;
+      --accent-ink: #92400e;
+      --ok: #166534;
+      --ok-soft: #dcfce7;
+      --danger: #b91c1c;
+      --danger-soft: #fee2e2;
+      --focus-ring: #1e40af;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg-canvas: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-subtle: #263348;
+      --ink-primary: #f8fafc;
+      --ink-muted: #cbd5e1;
+      --border-line: #334155;
+      --border-strong: #93c5fd;
+      --brand: #93c5fd;
+      --brand-soft: #1e3a8a;
+      --accent: #fbbf24;
+      --accent-soft: #451a03;
+      --accent-ink: #fde68a;
+      --ok: #86efac;
+      --ok-soft: #14532d;
+      --danger: #fca5a5;
+      --danger-soft: #450a0a;
+      --focus-ring: #93c5fd;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; }
+    .num { font-variant-numeric: tabular-nums; }
+    button, input, a { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 2px solid var(--focus-ring); outline-offset: 2px;
+    }
+    [hidden] { display: none !important; }
+    .skip-link {
+      position: absolute; left: -9999px; top: 8px; z-index: 100;
+      background: var(--bg-surface); padding: 10px 14px; border: 2px solid var(--border-strong); border-radius: 8px;
+    }
+    .skip-link:focus { left: 16px; }
+
+    .container { width: min(100% - 36px, 1280px); margin-inline: auto; padding-bottom: 52px; }
+    .site-header {
+      width: min(100% - 36px, 1280px);
+      margin: 18px auto 22px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-line);
+      border-radius: 14px;
+    }
+    .header-inner {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 10px 18px; padding: 10px 16px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 16px; font-weight: 750; text-decoration: none;
+    }
+    .brand-mark {
+      display: grid; place-items: center; width: 40px; height: 40px;
+      border-radius: 10px; background: #1e40af; color: #ffffff;
+    }
+    .section-nav { display: flex; flex-wrap: wrap; gap: 4px; }
+    .section-nav a {
+      display: inline-flex; align-items: center; min-height: 44px; padding: 6px 12px;
+      border-radius: 8px; color: var(--ink-muted); font-size: 14px; font-weight: 600; text-decoration: none;
+    }
+    .section-nav a:hover, .section-nav a[aria-current] { color: var(--brand); background: var(--brand-soft); }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-control, .btn-link {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      min-height: 44px; padding: 8px 14px;
+      border: 1px solid var(--border-line); border-radius: 9px;
+      background: var(--bg-surface); color: var(--ink-primary);
+      font-size: 14px; font-weight: 600; text-decoration: none;
+    }
+    .btn-control:hover, .btn-link:hover { background: var(--bg-subtle); border-color: var(--brand); }
+    .btn-primary { background: #1e40af; border-color: #1e40af; color: #ffffff; }
+    .btn-primary:hover { background: #1e3a8a; }
+
+    .hero-box {
+      background: var(--bg-surface); border: 1px solid var(--border-line);
+      border-radius: 14px; padding: 24px; margin-bottom: 22px;
+    }
+    .eyebrow { margin: 0 0 6px; color: var(--brand); font-size: 13px; font-weight: 700; }
+    h1 { margin: 0 0 10px; font-size: clamp(24px, 3vw, 34px); line-height: 1.2; letter-spacing: -0.02em; }
+    .lead-copy { margin: 0; max-width: 72ch; color: var(--ink-muted); font-size: 16px; }
+    .one-liner {
+      margin-top: 16px; padding: 14px 16px; border-radius: 10px;
+      background: var(--brand-soft); border-left: 4px solid var(--brand);
+      font-size: 15px;
+    }
+
+    .section-block { padding: 26px 0; border-top: 1px solid var(--border-line); scroll-margin-top: 16px; }
+    .section-head { margin-bottom: 16px; max-width: 72ch; }
+    .section-title { margin: 0 0 6px; font-size: clamp(20px, 2.2vw, 25px); font-weight: 750; }
+    .section-desc { margin: 0; color: var(--ink-muted); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .panel {
+      background: var(--bg-surface); border: 1px solid var(--border-line);
+      border-radius: 12px; padding: 18px; min-width: 0;
+    }
+    .panel-title { margin: 0 0 4px; font-size: 16px; font-weight: 750; }
+    .panel-sub { margin: 0 0 10px; font-size: 13px; color: var(--ink-muted); }
+
+    .table-wrap {
+      overflow-x: auto; background: var(--bg-surface);
+      border: 1px solid var(--border-line); border-radius: 12px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    th, td { padding: 11px 13px; border-bottom: 1px solid var(--border-line); vertical-align: top; }
+    th { background: var(--bg-subtle); font-size: 13px; font-weight: 700; color: var(--ink-muted); }
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .tab-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .filter-btn {
+      min-height: 44px; padding: 8px 14px; border: 1px solid var(--border-line);
+      border-radius: 8px; background: var(--bg-surface); font-size: 14px; font-weight: 650;
+    }
+    .filter-btn:hover { border-color: var(--brand); }
+    .filter-btn[aria-pressed="true"] { background: #1e40af; color: #ffffff; border-color: #1e40af; }
+    [data-theme="dark"] .filter-btn[aria-pressed="true"] { background: #93c5fd; color: #0f172a; }
+
+    .phase-detail {
+      background: var(--bg-surface); border: 1px solid var(--border-line);
+      border-radius: 12px; padding: 20px;
+    }
+    .phase-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .phase-step-item {
+      padding: 12px 14px; background: var(--bg-subtle); border-radius: 9px; border: 1px solid var(--border-line);
+    }
+    .phase-step-item strong { display: block; color: var(--brand); margin-bottom: 3px; font-size: 14px; }
+    .phase-step-item span { font-size: 13.5px; color: var(--ink-muted); }
+
+    .search-input {
+      width: min(100%, 340px); height: 44px; padding: 6px 12px;
+      background: var(--bg-surface); border: 1px solid var(--border-line); border-radius: 8px;
+    }
+
+    .tag {
+      display: inline-flex; padding: 2px 8px; border-radius: 5px;
+      font-size: 12px; font-weight: 700; background: var(--brand-soft); color: var(--brand);
+    }
+    .tag-warn { background: var(--accent-soft); color: var(--accent-ink); }
+    .tag-alert { background: var(--danger-soft); color: var(--danger); }
+
+    /* Q&A & Quiz */
+    .qa-item {
+      background: var(--bg-surface); border: 1px solid var(--border-line);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .qa-item summary {
+      cursor: pointer; font-weight: 700; font-size: 15px; min-height: 36px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .qa-item p { margin: 10px 0 0; font-size: 14.5px; color: var(--ink-muted); }
+
+    .quiz-card {
+      background: var(--bg-surface); border: 1px solid var(--border-line);
+      border-radius: 12px; padding: 18px; margin-bottom: 12px;
+    }
+    .quiz-q { margin: 0 0 10px; font-weight: 750; font-size: 15px; }
+    .quiz-opts { display: grid; gap: 8px; }
+    .quiz-opt {
+      text-align: left; min-height: 44px; padding: 9px 12px;
+      border: 1px solid var(--border-line); border-radius: 8px; background: var(--bg-subtle);
+      font-size: 14px;
+    }
+    .quiz-opt:hover { border-color: var(--brand); }
+    .quiz-opt.is-correct { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); font-weight: 700; }
+    .quiz-opt.is-wrong { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+    .quiz-fb { margin: 10px 0 0; font-size: 13.5px; color: var(--ink-muted); }
+
+    .site-footer {
+      padding-top: 22px; border-top: 1px solid var(--border-line);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 12px; font-size: 13px; color: var(--ink-muted);
+    }
+
+    @media (max-width: 760px) {
+      .container, .site-header { width: calc(100% - 20px); }
+      .grid-2, .grid-3, .phase-steps { grid-template-columns: 1fr; }
+      .search-input { font-size: 16px; width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Langsung ke materi belajar</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#inti">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        Panduan Belajar Kelompok 8
+      </a>
+      <nav class="section-nav" aria-label="Menu panduan belajar">
+        <a href="#inti" aria-current="location">Inti Proyek</a>
+        <a href="#dataset">Isi Dataset</a>
+        <a href="#alur-kode">Alur Notebook</a>
+        <a href="#kamus">Alat &amp; Istilah</a>
+        <a href="#latihan">Tanya-Jawab &amp; Kuis</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" id="theme-toggle" class="btn-control">Mode Gelap</button>
+        <a href="index.html" class="btn-link btn-primary">Buka Dashboard Presentasi</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container">
+    <!-- 1. INTI PROYEK -->
+    <section id="inti" class="hero-box" aria-labelledby="h-inti">
+      <p class="eyebrow">Halaman Internal Tim &middot; Persiapan Presentasi Hari Kamis</p>
+      <h1 id="h-inti">Pahami Seluruh Proyek H3-SHI dalam 5 Menit</h1>
+      <p class="lead-copy">
+        Halaman ini dibuat khusus untuk Anda dan rekan satu kelompok agar paham betul apa isi datasetnya, kenapa langkah kodenya seperti itu, apa fungsi tiap library Python, dan bagaimana menjawab pertanyaan dosen saat presentasi.
+      </p>
+      <div class="one-liner">
+        <strong>Satu kalimat hafalan inti proyek:</strong>
+        "Kami membagi peta Indonesia jadi <strong>7.017 petak sarang lebah (Uber H3)</strong> untuk mengukur wilayah mana yang paling rawan gempa dari data <strong>314 ribu gempa (1960 s.d. 2024)</strong>, lalu menguji hasilnya terhadap gempa susulan, kepadatan penduduk, dan potensi tsunami."
+      </div>
+    </section>
+
+    <!-- 2. BEDAH ISI DATASET -->
+    <section id="dataset" class="section-block" aria-labelledby="h-dataset">
+      <div class="section-head">
+        <h2 id="h-dataset" class="section-title">1. Sebenarnya Apa Isi Dataset Kita?</h2>
+        <p class="section-desc">
+          Kita memakai satu file utama catatan gempa Indonesia (<code>Integrated_Standardized_Earthquake_Catalogue*.csv</code>) berisi <strong>322.961 baris</strong> (lolos audit kualitas menjadi <strong>314.023 baris</strong>), ditambah 2 data pendukung (batas provinsi GADM &amp; kepadatan penduduk BPS).
+        </p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:16px;">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Nama Kolom di CSV</th>
+              <th scope="col">Arti Kolom</th>
+              <th scope="col">Contoh Isi Nyata</th>
+              <th scope="col">Temuan Penting yang Wajib Tim Ketahui</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Year</code>, <code>Date</code>, <code>Time_UTC</code></td>
+              <td>Kapan gempanya terjadi</td>
+              <td><code>2004-12-26 00:58:53</code></td>
+              <td>Data mentah mulai dari tahun 88 Masehi, tapi era sebelum 1960 dibuang karena belum ada alat ukur modern (hanya catatan sejarah).</td>
+            </tr>
+            <tr>
+              <td><code>Latitude</code>, <code>Longitude</code></td>
+              <td>Titik koordinat lokasi gempa</td>
+              <td><code>3.316 LU, 95.854 BT</code></td>
+              <td>Kotak Indonesia (-11 s.d. 6 LU, 95 s.d. 141 BT) mencakup darat dan laut, karena megathrust pemicu tsunami berada di dasar laut.</td>
+            </tr>
+            <tr>
+              <td><code>Depth_km</code></td>
+              <td>Kedalaman pusat gempa dari tanah</td>
+              <td><code>10.0 km</code> atau <code>186.0 km</code></td>
+              <td><span class="tag tag-warn">Catatan Data:</span> Sekitar <strong>30,24%</strong> gempa tertulis persis <code>10,0 km</code> atau <code>35,0 km</code>. Itu angka patokan saat sensor gagal menghitung kedalaman.</td>
+            </tr>
+            <tr>
+              <td><code>Magnitude</code> &amp; <code>Magnitude Type</code></td>
+              <td>Kekuatan gempa dan nama skala alatnya</td>
+              <td><code>7.1 Mw(mB)</code>, <code>4.3 MLv</code>, <code>7.5 Mw</code></td>
+              <td><span class="tag tag-alert">Temuan Utama:</span> Ada <strong>26 tipe skala</strong> tercampur. Skala lama (<code>mb</code> / <code>Mw(mB)</code>) mentok di angka besar, sehingga Aceh 2004 (aslinya 9,1) tertulis 7,1.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <h3 class="panel-title">Kenapa Tidak Pakai K-Means / DBSCAN Biasa?</h3>
+          <p style="margin:0; font-size:14px; color:var(--ink-muted);">
+            Bayangkan menaburkan beras membentuk garis melengkung panjang, lalu menyuruh K-Means membagi jadi 10 kelompok. K-Means memaksa membuat <strong>bulatan</strong>, padahal patahan gempa Indonesia (Megathrust Sumatra-Jawa 4.000 km, Busur Banda tapal kuda) itu <strong>garis melengkung panjang</strong>. Uber H3 menyelesaikan masalah ini dengan membagi peta menjadi grid sarang lebah seragam lebih dulu tanpa menebak bentuk.
+          </p>
+        </div>
+        <div class="panel">
+          <h3 class="panel-title">Kenapa Heksagon (Segi Enam), Bukan Kotak Persegi?</h3>
+          <p style="margin:0; font-size:14px; color:var(--ink-muted);">
+            Satu kotak punya 4 tetangga di sisi dan 4 tetangga di sudut yang jaraknya lebih jauh. Satu heksagon punya <strong>6 tetangga yang jaraknya dari titik tengah semuanya persis sama</strong>. Hal ini krusial saat kita meminjam data petak tetangga (<em>1-ring smoothing</em>) untuk menghitung tegangan kerak bumi agar adil.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. ALUR KODE NOTEBOOK STEP-BY-STEP -->
+    <section id="alur-kode" class="section-block" aria-labelledby="h-alur">
+      <div class="section-head">
+        <h2 id="h-alur" class="section-title">2. Peta Jalan Isi Notebook (Bagian 1 sampai 18)</h2>
+        <p class="section-desc">
+          File <code>H3_SHI_Seismic_Hazard.ipynb</code> punya 82 cell yang terbagi jadi 4 fase kerja. Klik tiap fase di bawah untuk membaca apa yang terjadi di dalamnya tanpa perlu membaca kode Python.
+        </p>
+      </div>
+
+      <div class="tab-bar" role="group" aria-label="Pilih fase notebook">
+        <button type="button" class="filter-btn phase-btn" data-phase="1" aria-pressed="true">Fase 1: Saring &amp; Audit Data (Bagian 1 s.d. 4)</button>
+        <button type="button" class="filter-btn phase-btn" data-phase="2" aria-pressed="false">Fase 2: Hitung Rapor Heksagon (Bagian 5 s.d. 10)</button>
+        <button type="button" class="filter-btn phase-btn" data-phase="3" aria-pressed="false">Fase 3: Uji Kejujuran Model (Bagian 11 s.d. 14)</button>
+        <button type="button" class="filter-btn phase-btn" data-phase="4" aria-pressed="false">Fase 4: Analisis Risiko Bencana (Bagian 15 s.d. 18)</button>
+      </div>
+
+      <div id="phase-box" class="phase-detail" aria-live="polite"></div>
+    </section>
+
+    <!-- 4. KAMUS LIBRARY PYTHON & ISTILAH RUMIT -->
+    <section id="kamus" class="section-block" aria-labelledby="h-kamus">
+      <div class="section-head">
+        <h2 id="h-kamus" class="section-title">3. Fungsi Library Python &amp; Daftar Alat dan Istilah Kunci</h2>
+        <p class="section-desc">
+          Ketik kata kunci di bawah (misalnya <code>folium</code>, <code>b-value</code>, <code>SREI</code>, atau <code>gap</code>) untuk mencari terjemahan bahasa sehari-harinya.
+        </p>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label for="glossary-search" class="sr-only">Cari library atau istilah</label>
+        <input type="search" id="glossary-search" class="search-input" placeholder="Cari alat atau istilah (mis. h3, geopandas, nilai b)..." autocomplete="off">
+      </div>
+
+      <div id="glossary-grid" class="grid-3"></div>
+    </section>
+
+    <!-- 5. TANYA JAWAB DOSEN & KUIS LATIHAN -->
+    <section id="latihan" class="section-block" aria-labelledby="h-latihan">
+      <div class="section-head">
+        <h2 id="h-latihan" class="section-title">4. Latihan Tanya-Jawab Penguji &amp; Kuis Tim</h2>
+        <p class="section-desc">
+          Klik pertanyaan di bawah untuk melihat jawaban siap ucap beserta angka buktinya, lalu uji pemahaman tim dengan 5 soal latihan singkat.
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="margin:0 0 10px; font-size:17px;">6 Pertanyaan Paling Sering Ditanya Penguji</h3>
+          <details class="qa-item" open>
+            <summary>1. Kenapa tidak pakai algoritma clustering seperti K-Means atau DBSCAN?</summary>
+            <p>Karena K-Means membuat kelompok berbentuk bulat, sementara jalur patahan dan subduksi gempa di Indonesia berbentuk garis memanjang dan melengkung (seperti Megathrust Sunda 4.000 km dan Busur Banda). Grid sarang lebah Uber H3 tidak memaksakan bentuk apapun, sehingga pola asli patahan muncul murni dari data.</p>
+          </details>
+          <details class="qa-item">
+            <summary>2. Kenapa Maluku Utara #1 di SHI, padahal gempa Jawa lebih sering memakan korban?</summary>
+            <p>Karena skor SHI hanya mengukur keaktifan geologi alam, dan 17 dari 20 petak Maluku Utara berada di laut pertemuan lempeng. Saat kami gabungkan dengan kepadatan penduduk BPS menjadi skor Risiko Manusia (SREI) di Bagian 18, peringkat teratas langsung pindah ke daratan padat di Banten (0,6946), Jawa Barat (0,6817), Bali (0,6587), dan DI Yogyakarta (0,6585).</p>
+          </details>
+          <details class="qa-item">
+            <summary>3. Bukankah katalog Anda menyebut Aceh 2004 cuma M 7,1? Kok salah?</summary>
+            <p>Betul, dan itu justru temuan audit kami! Katalog lama mencatatnya 7,1 dengan skala gelombang badan (Mw(mB)) karena alat pra-2010 jenuh di angka besar. Pada Bagian 15 notebook, kami mengkalibrasi 7 gempa raksasa memakai data global GCMT/USGS (Aceh menjadi 9,1), sehingga Aceh dan Bengkulu langsung naik ke peringkat puncak zona potensi tsunami.</p>
+          </details>
+          <details class="qa-item">
+            <summary>4. Apakah model ini bisa memprediksi kapan gempa berikutnya terjadi?</summary>
+            <p>Tidak. Proyek ini membuat peta indeks bahaya spasial (di mana tempat paling rawan berdasarkan data 1960 s.d. 2024), bukan alat peramal tanggal atau jam gempa. Gunanya untuk prioritas mitigasi bangunan tahan gempa dan jalur evakuasi tsunami.</p>
+          </details>
+          <details class="qa-item">
+            <summary>5. Kenapa memilih batas Magnitudo 4,0 (Mc = 4,0) dan minimum 10 gempa?</summary>
+            <p>Uji statistik MAXC menyarankan 3,0, tapi sensor di Indonesia timur dulu jarang sehingga gempa kecil banyak lolos. Memilih Mc = 4,0 dan minimal 10 gempa per petak memastikan kita tidak terkecoh oleh petak yang sepi hanya karena kurang sensor, sekaligus menjaga estimasi tegangan batuan (b-value) tetap stabil.</p>
+          </details>
+          <details class="qa-item">
+            <summary>6. Apa jaminan hasil Top-20 tidak rusak oleh data cacat atau gempa susulan?</summary>
+            <p>Kami sudah mengujinya 4 kali: (a) membuang 30,2% data kedalaman default 10/35 km, hasilnya 20 dari 20 teratas tetap bertahan; (b) memisahkan 58,3% gempa susulan memakai Gardner-Knopoff (korelasi Spearman tetap kuat 0,87); dan (c) membandingkan tren era sesudah 2005 pada ambang adil M &ge; 4,5 agar tidak tertipu lonjakan sensor baru.</p>
+          </details>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 10px; font-size:17px;">Kuis Pemahaman Tim (Skor: <span id="quiz-score">0</span> / 5)</h3>
+          <div id="quiz-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Panduan Belajar Internal &middot; Kelompok 8 Big Data</strong><br>
+        <span>Seluruh angka bersumber langsung dari hasil eksekusi 61 cell kode <code>H3_SHI_Seismic_Hazard.ipynb</code>.</span>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="index.html" class="btn-link btn-primary">Buka Dashboard Presentasi</a>
+        <a href="indonesia_seismic_hazard_map.html" class="btn-link">Buka Peta 7.017 Petak</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const PHASES = {
+      "1": {
+        title: "Fase 1: Membersihkan Data & Audit Kejujuran (Bagian 1 s.d. 4)",
+        summary: "Memastikan data mentah 322.961 baris tidak mengandung catatan sejarah kuno atau angka jebakan sebelum dihitung.",
+        steps: [
+          { name: "Bagian 1 & 2: Penyaringan 4 Tahap", desc: "Menyaring era alat modern (>= 1960), kotak wilayah Indonesia, baris lengkap, dan kedalaman masuk akal (0 s.d. 700 km). Hasil: 314.023 gempa bersih." },
+          { name: "Temuan Kedalaman Default (10 & 35 km)", desc: "Audit menemukan 30,24% gempa tertulis persis 10 km atau 35 km (nilai default saat stasiun gagal menghitung kedalaman). Ini ditandai agar bisa diuji dampaknya nanti." },
+          { name: "Bagian 3: Pembagian Sarang Lebah Uber H3", desc: "Setiap gempa diberi kode petak H3 Resolusi 5 (~253 km2). Ada 17.140 petak terisi, lalu dipilih 7.017 petak aktif yang punya minimal 10 gempa." },
+          { name: "Bagian 4: Batas Kelengkapan (Mc = 4,0)", desc: "Memeriksa mulai magnitudo berapa catatan gempa Indonesia terekam lengkap secara nasional, dan menetapkan ambang aman Mc = 4,0." }
+        ]
+      },
+      "2": {
+        title: "Fase 2: Menghitung Skor Bahaya 4 Indikator & Peta (Bagian 5 s.d. 10)",
+        summary: "Mengubah ribuan titik gempa menjadi skor rapor bahaya 0 sampai 1 (atau 0 s.d. 100 di dashboard awam) lalu menaruhnya di peta provinsi.",
+        steps: [
+          { name: "Bagian 5: Fungsi build_shi() dengan 4 Bahan", desc: "Menggabungkan rata-rata 0,25 untuk: Densitas Gempa (n_norm), Rasio Dangkal dengan shrinkage (s_norm), Tegangan Batuan dari b-value (b_inv), dan Magnitudo Maks (m_norm)." },
+          { name: "Bagian 6: 14 Pemeriksaan Otomatis (Assertions)", desc: "Memastikan tidak ada skor keluar rentang [0, 1], tidak ada angka NaN, dan tidak ada nilai tertinggal." },
+          { name: "Bagian 7 & 8: Uji Sensitivitas & Grafik", desc: "Menguji apakah peringkat berubah jika syarat minimum gempa (5/10/20), ukuran petak (Res 4/5/6), bobot entropi, atau data 10 km diubah." },
+          { name: "Bagian 9 & 10: Peta Provinsi & Folium Interaktif", desc: "Mencocokkan Top-20 dengan batas 34 provinsi GADM (17 Maluku Utara, 2 Sulut, 1 Papua) lalu membuat file peta interaktif 16,8 MB." }
+        ]
+      },
+      "3": {
+        title: "Fase 3: Uji Kejujuran terhadap Gempa Nyata (Bagian 11 s.d. 14)",
+        summary: "Menguji apakah model kita sesuai dengan 6 gempa besar sejarah Indonesia dan menyelidiki keanehan skala magnitudo.",
+        steps: [
+          { name: "Bagian 12: Cek 6 Gempa Bersejarah", desc: "Memeriksa Aceh 2004, Nias 2005, Yogya 2006, Padang 2009, Lombok 2018, dan Palu 2018. Terbongkar bahwa gempa Aceh hanya tercatat 7,1 di data mentah dan susulannya tersebar 1.300 km." },
+          { name: "Bagian 13: Investigasi 26 Skala Magnitudo", desc: "Membuktikan adanya pencampuran 26 tipe skala (MLv 42,2%, mb 30,4%, Mw murni cuma 0,43%), tapi tercampur merata antarwilayah sehingga peringkat relatif tetap aman." },
+          { name: "Bagian 13.4 & 13.5: Uji Konversi Scordilis", desc: "Mencoba rumus konversi generik dan menyimpulkan bahwa mengkalibrasi magnitudo gempa raksasa langsung dari GCMT lebih tepat sasaran." },
+          { name: "Bagian 14: Ekspor Ringkasan Teks", desc: "Menulis seluruh metrik audit ke file h3shi_review.txt agar angka laporan selalu konsisten." }
+        ]
+      },
+      "4": {
+        title: "Fase 4: Pengembangan Analisis Risiko Bencana (Bagian 15 s.d. 18)",
+        summary: "Mengubah peta geologi menjadi peta risiko manusia, memisahkan gempa susulan, mengecek tren tahunan, dan memetakan tsunami.",
+        steps: [
+          { name: "Bagian 15: Tambal 7 Gempa Raksasa & Darat vs Tsunami", desc: "Mengkalibrasi Aceh (9,1), Nias (8,6), Bengkulu (8,4), dll. Memisahkan 7.017 petak jadi 2.760 darat, 2.798 laut dekat pantai, 1.459 laut lepas, serta menemukan 74 petak kandidat tsunami." },
+          { name: "Bagian 16: Buang Gempa Susulan & Cari Zona Diam", desc: "Metode Gardner-Knopoff memisahkan 41,7% gempa induk vs 58,3% susulan, dan mendeteksi 1.205 petak kandidat Seismic Gap yang tegang namun tenang sejak 2005." },
+          { name: "Bagian 17: Grafik Tren 1960 s.d. 2024", desc: "Memisahkan lonjakan gempa kecil (< 4,5) karena bertambahnya sensor baru dari aktivitas gempa M >= 4,5 yang naik 8,86x di Sumbar dan 4,71x di Aceh pasca-2005." },
+          { name: "Bagian 18: Indeks Risiko Manusia (SREI)", desc: "Menggabungkan SHI (60%) + kepadatan penduduk BPS & jarak ke darat (40%). Hasilnya Banten, Jawa Barat, Bali, dan DI Yogyakarta menempati puncak risiko warga." }
+        ]
+      }
+    };
+
+    const GLOSSARY = [
+      { name: "pandas", cat: "Library Python", desc: "Untuk membaca file CSV 322 ribu baris, menyaring tahun/lokasi, dan mengelompokkan data per petak." },
+      { name: "numpy", cat: "Library Python", desc: "Untuk hitungan matematika cepat pada array ribuan angka (seperti logaritma, jarak Haversine, dan declustering)." },
+      { name: "h3 (Uber H3 v4)", cat: "Library Python", desc: "Membagi bola bumi menjadi petak sarang lebah seragam. Kita pakai Resolusi 5 (~253 km2 per petak)." },
+      { name: "geopandas & shapely", cat: "Library Python", desc: "Membaca peta 34 provinsi Indonesia (GADM) dan menghitung apakah petak ada di darat atau berapa km dari pantai." },
+      { name: "folium", cat: "Library Python", desc: "Membuat peta web interaktif Leaflet berwarna (file indonesia_seismic_hazard_map.html) yang bisa diklik per petak." },
+      { name: "matplotlib & seaborn", cat: "Library Python", desc: "Menggambar grafik analisis seperti grafik tren gempa tahunan 1960 s.d. 2024 (fig_temporal_trends.png)." },
+      { name: "SHI (Seismic Hazard Index)", cat: "Istilah Proyek", desc: "Rapor keaktifan gempa murni secara alam (nilai 0 s.d. 1, atau 0 s.d. 100 di dashboard awam). Maluku Utara #1." },
+      { name: "SREI (Risiko Manusia)", cat: "Istilah Proyek", desc: "Gabungan 60% bahaya alam (SHI) + 40% kepadatan penduduk BPS & posisi darat/laut. Banten dan Jawa Barat #1." },
+      { name: "b-value (Tegangan Kerak)", cat: "Istilah Seismologi", desc: "Perbandingan jumlah gempa kecil vs besar. Nilai b rendah artinya batuan tegang dan berpotensi menyimpan energi besar." },
+      { name: "Declustering (Gardner-Knopoff)", cat: "Istilah Seismologi", desc: "Cara menyaring gempa susulan berdasarkan radius jarak dan hari setelah gempa induk agar tidak menggelembungkan hitungan." },
+      { name: "Seismic Gap (Zona Diam)", cat: "Istilah Seismologi", desc: "Wilayah bertegangan kerak tinggi (b < 0,75) yang tidak melepaskan gempa M >= 6,0 dalam 20 tahun terakhir sehingga patut diwaspadai." },
+      { name: "Saturasi Magnitudo", cat: "Temuan Data", desc: "Kelemahan skala gelombang badan (mb / Mw(mB)) yang mentok di gempa raksasa, misalnya Aceh 2004 tercatat 7,1 padahal aslinya 9,1." }
+    ];
+
+    const QUIZ = [
+      {
+        q: "1. Kenapa kita tidak memakai K-Means clustering untuk memetakan gempa Indonesia?",
+        opts: [
+          "Karena K-Means membuat kelompok bulat, sedangkan jalur patahan gempa melengkung panjang",
+          "Karena K-Means tidak bisa berjalan di Google Colab",
+          "Karena K-Means hanya bekerja untuk gempa di daratan saja"
+        ],
+        ans: 0,
+        why: "Benar! Megathrust Sunda dan Busur Banda berbentuk melengkung memanjang. Clustering bulat akan memotong satu sesar jadi beberapa bulatan tidak alami."
+      },
+      {
+        q: "2. Mengapa Banten dan Jawa Barat menempati peringkat teratas Risiko Manusia (SREI), menggeser Maluku Utara?",
+        opts: [
+          "Karena gempa di Jawa Barat jumlahnya lebih banyak daripada Maluku Utara",
+          "Karena Maluku Utara kebanyakan gempanya di laut, sedangkan Jawa Barat & Banten menggabungkan bahaya tinggi di darat dengan kepadatan warga >1.200 jiwa/km2",
+          "Karena Maluku Utara tidak dihitung nilai b-value-nya"
+        ],
+        ans: 1,
+        why: "Tepat! Bahaya geologi (SHI) di Maluku Utara memang tertinggi, tapi SREI memperhitungkan kepadatan warga yang tinggal tepat di atas zona gempa darat."
+      },
+      {
+        q: "3. Apa temuan utama saat kita memisahkan gempa utama dan gempa susulan (Declustering)?",
+        opts: [
+          "Hampir semua data (95%) adalah gempa induk",
+          "Sebanyak 58,3% catatan ternyata gempa susulan, dan membuangnya menggeser 10 dari 20 petak Top-20",
+          "Tidak ada perubahan sama sekali pada peringkat peta"
+        ],
+        ans: 1,
+        why: "Betul! Dari 314.017 gempa valid waktu, 182.999 (58,3%) adalah gempa susulan dari gempa utama."
+      },
+      {
+        q: "4. Kenapa grafik tahunan menunjukkan gempa kecil (M < 4,5) melonjak tajam hingga ~35.000 kejadian/tahun pada 2024?",
+        opts: [
+          "Karena pemasangan sensor seismograf modern BMKG makin banyak dan peka setelah 2005",
+          "Karena bumi bertambah besar setiap tahun",
+          "Karena kesalahan penulisan tanggal di Google Colab"
+        ],
+        ans: 0,
+        why: "Tepat! Itulah sebabnya saat membandingkan tren antar-era (Bagian 17) kita memakai ambang M >= 4,5 yang lebih adil antar-zaman."
+      },
+      {
+        q: "5. Apa yang terjadi setelah 7 gempa raksasa yang tersaturasi (seperti Aceh 2004) dikalibrasi ke magnitudo asli GCMT?",
+        opts: [
+          "Seluruh peta menjadi kosong",
+          "Pesisir Aceh dan Bengkulu naik menempati puncak daftar Zona Potensi Tsunami",
+          "Semua gempa menjadi masuk kategori daratan"
+        ],
+        ans: 1,
+        why: "Benar! Sebelum dikalibrasi, skala gempa Aceh/Bengkulu tertahan di 7,0 sehingga potensi tsunaminya kurang menonjol dibanding kenyataan."
+      }
+    ];
+
+    const phaseBox = document.getElementById("phase-box");
+    function renderPhase(id) {
+      const p = PHASES[id];
+      phaseBox.innerHTML = `
+        <h3 class="panel-title" style="font-size:18px;">${p.title}</h3>
+        <p class="panel-sub" style="font-size:14px;">${p.summary}</p>
+        <div class="phase-steps">
+          ${p.steps.map(s => `
+            <div class="phase-step-item">
+              <strong>${s.name}</strong>
+              <span>${s.desc}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+    document.querySelectorAll(".phase-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".phase-btn").forEach(b => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
+        renderPhase(btn.dataset.phase);
+      });
+    });
+    renderPhase("1");
+
+    const glossaryGrid = document.getElementById("glossary-grid");
+    const glossarySearch = document.getElementById("glossary-search");
+    function renderGlossary(q = "") {
+      const ql = q.trim().toLowerCase();
+      const items = ql ? GLOSSARY.filter(g => g.name.toLowerCase().includes(ql) || g.cat.toLowerCase().includes(ql) || g.desc.toLowerCase().includes(ql)) : GLOSSARY;
+      if (!items.length) {
+        glossaryGrid.innerHTML = `<div class="panel" style="grid-column:1/-1;">Tidak ada istilah cocok dengan "${q}".</div>`;
+        return;
+      }
+      glossaryGrid.innerHTML = items.map(g => `
+        <article class="panel">
+          <span class="tag" style="margin-bottom:6px;">${g.cat}</span>
+          <h3 class="panel-title">${g.name}</h3>
+          <p style="margin:0; font-size:13.5px; color:var(--ink-muted);">${g.desc}</p>
+        </article>
+      `).join("");
+    }
+    glossarySearch.addEventListener("input", e => renderGlossary(e.target.value));
+    renderGlossary();
+
+    const quizContainer = document.getElementById("quiz-container");
+    const quizScoreEl = document.getElementById("quiz-score");
+    const answered = new Map();
+    quizContainer.innerHTML = QUIZ.map((item, qi) => `
+      <div class="quiz-card" data-qi="${qi}">
+        <p class="quiz-q">${item.q}</p>
+        <div class="quiz-opts">
+          ${item.opts.map((o, oi) => `<button type="button" class="quiz-opt" data-qi="${qi}" data-oi="${oi}">${o}</button>`).join("")}
+        </div>
+        <p class="quiz-fb" id="qfb-${qi}" hidden></p>
+      </div>
+    `).join("");
+
+    quizContainer.addEventListener("click", e => {
+      const btn = e.target.closest(".quiz-opt");
+      if (!btn) return;
+      const qi = Number(btn.dataset.qi), oi = Number(btn.dataset.oi);
+      const item = QUIZ[qi];
+      answered.set(qi, oi === item.ans);
+      const card = btn.closest(".quiz-card");
+      card.querySelectorAll(".quiz-opt").forEach((b, idx) => {
+        b.classList.remove("is-correct", "is-wrong");
+        if (idx === item.ans) b.classList.add("is-correct");
+        else if (idx === oi) b.classList.add("is-wrong");
+      });
+      const fb = document.getElementById(`qfb-${qi}`);
+      fb.hidden = false;
+      fb.textContent = (oi === item.ans ? "Tepat! " : "Belum tepat. ") + item.why;
+      quizScoreEl.textContent = [...answered.values()].filter(Boolean).length;
+    });
+
+    const themeBtn = document.getElementById("theme-toggle");
+    themeBtn.addEventListener("click", () => {
+      const htmlEl = document.documentElement;
+      const next = htmlEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      htmlEl.setAttribute("data-theme", next);
+      themeBtn.textContent = next === "dark" ? "Mode Terang" : "Mode Gelap";
+    });
+
+    const navLinks = [...document.querySelectorAll(".section-nav a")];
+    window.addEventListener("hashchange", () => {
+      const h = location.hash || "#inti";
+      navLinks.forEach(a => a.hash === h ? a.setAttribute("aria-current", "location") : a.removeAttribute("aria-current"));
+    });
+  </script>
+</body>
+</html>
